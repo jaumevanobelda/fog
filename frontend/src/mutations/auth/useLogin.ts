@@ -7,9 +7,9 @@ export function useLogin() {
     return useMutation({
         mutationFn: login,
         onSuccess: (data) => {
-            console.log(" Dataa ", data);
+            console.log(" Data uselogin ", data);
             localStorage.setItem('token', data.user.token);
-            queryClient.setQueryData(['me'], data.user)
+            queryClient.setQueryData(['me'], data.user);
         }
     })
 }

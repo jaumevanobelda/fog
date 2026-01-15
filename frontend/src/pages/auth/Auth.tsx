@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import './Auth.css';
-import { useLogin } from '../../queries/auth/useLogin';
+import { useLogin } from '../../mutations/auth/useLogin';
 
 export default function Auth() {
 

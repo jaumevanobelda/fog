@@ -1,6 +1,5 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { useMe } from '../../../queries/auth/useMe'
-import type { ReactNode } from 'react';
+import { useMe } from '../queries/auth/useMe'
 
 
 export default function PrivateRoute() {

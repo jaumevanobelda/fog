@@ -14,6 +14,8 @@ export async function getCurrent() {
 }
 
 export function logout() {
+    console.log("Logout");
     localStorage.removeItem('token');
+    queryClient.setQueryData(['me'], null);
     queryClient.removeQueries({ queryKey: ['me'] });
 }

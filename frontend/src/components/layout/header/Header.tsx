@@ -1,8 +1,13 @@
+import { useUser } from '../../../context/userContext';
 import './Header.css'
 import { Link } from 'react-router-dom'
+import { logout } from "../../../services/authService";
+
 
 export default function Header() {
-  const userLogged = false;
+  const {userLogged,user} =  useUser();
+  // console.log("User ",user);
+  
   return (
     <>
       <div className='navmenu'>
@@ -18,7 +23,6 @@ export default function Header() {
 
 
 
-
   function noLogged() {
     return (
       <>
@@ -30,7 +34,7 @@ export default function Header() {
   function Logged() {
     return (
       <>
-        <div><button>logout</button></div>
+        <div><button onClick={logout}>logout</button></div>
       </>
     )
   }
