@@ -3,7 +3,7 @@ import type { Game } from '../../types/game'
 
 
 export default function GameCard({game}:{game: Game}){
-    console.log("GAME ",game);
+    // console.log("GAME ",game);
     
     return (
         <>
