@@ -1,10 +1,10 @@
 import axios from "axios";
 
-const API_RUBY_URL = "http://localhost:3000";
+const API_CLIENT_SERVER_URL = "http://localhost:3001";
 const API_AUTH_URL = "http://localhost:3000";
 
-export const apiGame = axios.create({
-    baseURL: API_RUBY_URL,
+export const apiClientServer = axios.create({
+    baseURL: API_CLIENT_SERVER_URL,
 });
 
 export const apiAuth = axios.create({
@@ -22,5 +22,5 @@ const addAuthInterceptor = (apiInstance: any) => {
     })
 }
 
-addAuthInterceptor(apiGame);
+addAuthInterceptor(apiClientServer);
 addAuthInterceptor(apiAuth);
