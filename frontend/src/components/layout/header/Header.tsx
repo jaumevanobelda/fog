@@ -5,7 +5,7 @@ import { logout } from "../../../services/authService";
 
 
 export default function Header() {
-  const {userLogged,user} =  useUser();
+  const {userLogged} =  useUser();
   // console.log("User ",user);
   
   return (
