@@ -7,4 +7,6 @@ export interface Game {
   precio: number
   images: string[]
   developer: string
+  rating?:number
+  num_reviews?:number
 }
