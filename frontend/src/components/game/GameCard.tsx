@@ -8,9 +8,7 @@ export default function GameCard({ game }: { game: Game }) {
 
   return (
     <>
-      {/* <Link to={`/details/${game.slug}`}> */}
-      <Link to={`/details/${game.id}`}>
-      
+      <Link to={`/details/${game.slug}`}>
         <div className='gameDiv'>
           <img className='gameImg' src={game.images[0]}></img>
           <div className='gameBody'>

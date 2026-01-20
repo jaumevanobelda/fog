@@ -1,11 +1,15 @@
 import { useGame } from '../../queries/games/useGame';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { GameImageCarousel } from '../../components/game/GameImageCarousel';
 import { Button } from '@/components/ui/button';
+import { useAddToCart } from '@/mutations/cart/useCart';
+import { toast } from 'sonner';
 
 export default function Details() {
 
   const { isLoading, isError, error, data: game, } = useGame(useParams().slug!);
+  const {mutateAsync} = useAddToCart();
+  const navigate = useNavigate();
 
   if (isLoading) return <p> Cargando...</p>
 
@@ -41,7 +45,6 @@ export default function Details() {
           <div>
             <h1 className='text-2xl font-bold mb-2'>Categorias:</h1>
             <div className='flex flex-wrap gap-2'>
-              {/* las categorias en la misma linea */}
               {game.categorias.map((categoria: string) => {
                 return (
                   <div key={categoria} className='bg-gray-700 px-3 py-1 rounded'>
@@ -57,14 +60,36 @@ export default function Details() {
 
           <div className='flex items-center gap-4 pt-4'>
             <h2 className='text-3xl font-bold'>{game.precio}€</h2>
-            {/* MISMA LINEA */}
-            <Button variant="outline">Añadir al carrito</Button>
+            <Button variant="outline" onClick={addToCart}>Añadir al carrito</Button>
+            
           </div>
 
         </div>
       </div>
     </>
   )
+
+  async function addToCart() {
+    try {
+      let data = await mutateAsync(game!.id);
+      console.log("data ",await data);
+      toast.success("Juego añadidido al carrito");
+
+    } catch (error:any) {
+      console.log("Error add to cart ",error);
+      if(error.response.status === 401){
+        toast.error("Para añadir al carrito inicia sesión", {
+          action: {
+            label: "Iniciar sesion",
+            onClick: () => navigate('/auth/login'),
+          }
+        });
+      }else{
+        toast.error("Ha ocurrido un error inseperado",{description:error.response.data.error});
+      }
+    }
+    
+  }
 
 
 

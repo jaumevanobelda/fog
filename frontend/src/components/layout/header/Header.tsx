@@ -2,6 +2,7 @@ import { useUser } from '../../../context/userContext';
 import './Header.css'
 import { Link } from 'react-router-dom'
 import { logout } from "../../../services/authService";
+import Cart from '@/components/cart/Cart';
 
 
 export default function Header() {
@@ -17,6 +18,7 @@ export default function Header() {
         <div className='userMenu'>
           {userLogged ? Logged() : noLogged()}
         </div>
+        
       </div>
     </>
   )
@@ -35,6 +37,7 @@ export default function Header() {
     return (
       <>
         <div><button onClick={logout}>logout</button></div>
+          <Cart></Cart>
       </>
     )
   }

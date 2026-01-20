@@ -10,3 +10,4 @@ export async function getGame(slug:string) {
     const res = await apiClientServer.get(`games/${slug}`);
     return await res.data;
 }   
+

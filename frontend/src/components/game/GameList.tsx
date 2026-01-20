@@ -3,7 +3,7 @@ import GameCard from './GameCard'
 
 
 export default function GameList ({games}:{games: Game[]}){
-    console.log("games ",games);
+    console.log("games ",games);    
     return (
         <>
             <div className="gamesList">
