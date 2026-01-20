@@ -3,6 +3,8 @@ import App from "../App";
 import Shop from "../pages/shop/Shop";
 import Auth from "../pages/auth/Auth";
 import Details from "../pages/details/Details";
+import CheckoutSuccess from "../pages/checkout/CheckoutSuccess";
+import CheckoutCancel from "../pages/checkout/CheckoutCancel";
 
 export default function AppRouter() {
     return(  
@@ -12,6 +14,8 @@ export default function AppRouter() {
         <Route index element={<Shop/>} /> 
         <Route path="details/:slug" element={<Details/>} />
         <Route path="auth/:tipo" element={<Auth/>} />
+        <Route path="checkout/success" element={<CheckoutSuccess/>} />
+        <Route path="checkout/cancel" element={<CheckoutCancel/>} />
         {/* <Route element={<PrivateRoute />}>
         </Route> */}
       </Route>

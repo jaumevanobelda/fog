@@ -1,9 +1,14 @@
-import { CreateOrder } from '@/services/orderService';
+import { CreateCheckoutSession, ConfirmOrder } from '@/services/orderService';
 import { useMutation } from '@tanstack/react-query'
 
-
-export function useCreateOrder() {
+export function useCreateCheckoutSession() {
   return useMutation({
-    mutationFn: CreateOrder,
+    mutationFn: CreateCheckoutSession,
+  });
+}
+
+export function useConfirmOrder() {
+  return useMutation({
+    mutationFn: ConfirmOrder,
   });
 }

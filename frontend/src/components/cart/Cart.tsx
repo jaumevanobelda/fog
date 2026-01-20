@@ -5,10 +5,9 @@ import { useGetCart } from '@/queries/cart/useCart'
 import GameCartCard from './GameCartCard';
 import { ShoppingCart } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useEffect, useState } from 'react'
-import { useCreateOrder } from '@/mutations/order/useOrder';
+import { useState } from 'react'
+import { useCreateCheckoutSession } from '@/mutations/order/useOrder';
 import { toast } from 'sonner';
-import { useClearCart } from '@/mutations/cart/useCart';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../ui/empty';
 import { Link } from 'react-router-dom';
 
@@ -16,8 +15,7 @@ import { Link } from 'react-router-dom';
 export default function Cart() {
 
     let { data, isLoading } = useGetCart();
-    let { mutateAsync: CreateOrder } = useCreateOrder();
-    let { mutateAsync: ClearCart } = useClearCart();
+    let { mutateAsync: createCheckout, isPending } = useCreateCheckoutSession();
     const [open, setOpen] = useState(false);
     console.log("DATA Cart", data);
 
@@ -48,7 +46,9 @@ export default function Cart() {
                 {data.cart?.map((id: number) => {
                     return <GameCartCard id={id} key={id}></GameCartCard>
                 })}
-                <Button onClick={comprar}>Comprar</Button>
+                <Button onClick={comprar} disabled={isPending}>
+                    {isPending ? 'Procesando...' : 'Comprar'}
+                </Button>
             </>
         )
     }
@@ -79,16 +79,18 @@ export default function Cart() {
 
     async function comprar() {
         try {
-            let res = await CreateOrder(data.cart);
-            console.log("Res ", res);
-            toast.success("Compra realizada");
-            ClearCart();
-            setOpen(false);
-        } catch (error:any) {
+            const res = await createCheckout(data.cart);
+            console.log("Checkout session:", res);
+            // Redirigir a Stripe Checkout
+            if (res.url) {
+                window.location.href = res.url;
+            }
+        } catch (error: any) {
             console.log("Error ", error);
-            toast.error("Ha ocurrido un error al realizar la compra",{description:error.response.data.error});
+            toast.error("Ha ocurrido un error al procesar el pago", { 
+                description: error.response?.data?.error || 'Error desconocido' 
+            });
         }
-
     }
 
 }
