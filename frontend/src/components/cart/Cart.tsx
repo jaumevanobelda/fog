@@ -81,7 +81,6 @@ export default function Cart() {
         try {
             const res = await createCheckout(data.cart);
             console.log("Checkout session:", res);
-            // Redirigir a Stripe Checkout
             if (res.url) {
                 window.location.href = res.url;
             }

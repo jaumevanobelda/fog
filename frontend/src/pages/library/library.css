@@ -1,0 +1,14 @@
+.library-container {
+  height: calc(100vh - 7rem);
+  max-height: calc(100vh - 7rem);
+  overflow: hidden;
+}
+
+.library-panel-group {
+  height: 100%;
+}
+
+.library-scrollarea {
+  height: 100%;
+  overflow: auto;
+}
