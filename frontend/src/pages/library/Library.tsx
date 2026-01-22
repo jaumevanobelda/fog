@@ -4,9 +4,21 @@ import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/componen
 import { useEffect, useState } from "react";
 import GameLibraryCard from "@/components/library/GameLibraryCard";
 import './library.css';
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@radix-ui/react-collapsible";
 import { Button } from "@/components/ui/button";
-import { ChevronRightIcon } from "lucide-react";
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+    DialogTrigger,
+} from "@/components/ui/dialog"
+import { Input } from "@/components/ui/input";
+import { useAddCollection } from "@/mutations/library/useLibrary";
+import CollectionCard from "@/components/library/collectionCard";
+
 
 
 export default function Library() {
@@ -14,14 +26,17 @@ export default function Library() {
     const library = data?.library || [];
 
     const [currentGame, setCurrentGame] = useState<number | null>(null);
+    const [nuevacollection, setNuevacollection] = useState<string>('');
+    const { mutate: addcollection } = useAddCollection();
     useEffect(() => {
+        console.log("Library ", library);
         const prevOverflow = document.body.style.overflow;
         document.body.style.overflow = 'hidden';
         return () => { document.body.style.overflow = prevOverflow; }
     }, []);
 
+
     if (isLoading) return <p>Cargando</p>
-    console.log("Library ", library);
 
     return (
         <>
@@ -31,41 +46,35 @@ export default function Library() {
                         <div className="h-full bg-gray-900 border-r border-gray-800">
                             <ScrollArea className="h-full">
                                 {library.map((collection: any) => (
-                                    <Collapsible key={collection.id}>
-                                        <CollapsibleTrigger asChild>
-                                            <Button
-                                                variant="ghost"
-                                                size="sm"
-                                                className="group hover:bg-accent hover:text-accent-foreground w-full justify-start transition-none">
-                                                <ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
-                                                {collection.collection}
-                                            </Button>
-                                        </CollapsibleTrigger>
-                                        
-                                        <CollapsibleContent className="ml-4 mt-1">
-                                            <div className="p-2">
-                                                {collection.games.map((game: any) => (
-                                                    <div
-                                                        key={game.id}
-                                                        onClick={() => setCurrentGame(game.id)}
-                                                        className={`
-                                                group cursor-pointer px-4 py-3 rounded-lg mb-2 transition-all duration-200
-                                                ${currentGame === game.id
-                                                                ? 'bg-blue-600/20 border-l-4 border-blue-500'
-                                                                : 'bg-gray-800/50 hover:bg-gray-700/50 border-l-4 border-transparent'
-                                                            }`}>
-                                                        <h3 className={`
-                                                font-medium truncate text-sm
-                                                ${currentGame === game.id ? 'text-blue-300' : 'text-white group-hover:text-blue-200'}
-                                            `}>
-                                                            {game.nom}
-                                                        </h3>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        </CollapsibleContent>
-                                    </Collapsible>
+                                    <CollectionCard collection={collection} currentGame={currentGame} setCurrentGame={setCurrentGame} key={collection.id}></CollectionCard>
                                 ))}
+
+                                <Dialog>
+                                    <DialogTrigger asChild>
+                                        <Button>
+                                            Agregar una coleccion
+                                        </Button>
+                                    </DialogTrigger>
+                                    <DialogContent>
+                                        <DialogHeader>
+                                            <DialogTitle>Crear nueva colección</DialogTitle>
+                                            <DialogDescription></DialogDescription>
+                                        </DialogHeader>
+                                        {/* <Label htmlFor="username-1">Crear nueva colección </Label> */}
+                                        <Input id="nom" name="nom" placeholder="Introduce el nombre de la colección"
+                                            value={nuevacollection}
+                                            onChange={(e) => setNuevacollection(e.target.value)} />
+
+                                        <DialogFooter>
+                                            <DialogClose asChild>
+                                                <Button onClick={() => { addcollection(nuevacollection); setNuevacollection(''); }}
+                                                    disabled={nuevacollection.trim() === ''}>
+                                                    Enviar
+                                                </Button>
+                                            </DialogClose>
+                                        </DialogFooter>
+                                    </DialogContent>
+                                </Dialog>
                             </ScrollArea>
                         </div>
                     </ResizablePanel>
