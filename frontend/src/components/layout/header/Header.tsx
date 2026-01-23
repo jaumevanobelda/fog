@@ -14,6 +14,7 @@ export default function Header() {
       <div className='navmenu'>
         <nav className="topnav">
           <div><Link to="/">shop</Link></div>
+          <div><Link to="/library">Biblioteca</Link></div>
         </nav>
         <div className='userMenu'>
           {userLogged ? Logged() : noLogged()}

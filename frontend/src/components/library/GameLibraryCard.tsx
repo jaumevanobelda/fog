@@ -1,11 +1,11 @@
-import { useGame } from '@/queries/games/useGame'
+import {  useGameById } from '@/queries/games/useGame'
 import { Button } from '../ui/button';
 import { useNavigate } from 'react-router-dom';
 
 
 export default function GameLibraryCard({ id }: { id: number }) {
 
-    let { data: game, isLoading } = useGame(id);
+    let { data: game, isLoading } = useGameById(id);
     if (isLoading) {
         return (
             <div className='flex items-center justify-center h-full'>

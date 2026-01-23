@@ -11,3 +11,9 @@ export async function getGame(slug:string) {
     return await res.data;
 }   
 
+export async function getGameById(id:number) {
+    const res = await apiClientServer.get(`games/id/${id}`);
+    return await res.data;
+}   
+
+
