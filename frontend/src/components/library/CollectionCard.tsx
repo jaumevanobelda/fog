@@ -3,10 +3,12 @@ import { Button } from '../ui/button';
 import { useDraggable, useDroppable } from '@dnd-kit/core';
 import { Empty, EmptyContent, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronRightIcon, GripVertical } from 'lucide-react';
+import { ChevronRightIcon, GripVertical, Trash2Icon } from 'lucide-react';
 import { CSS } from '@dnd-kit/utilities';
 import type { Collection } from '@/types/collection';
 import { useRef, useState } from 'react';
+import { useRemoveCollection } from '@/mutations/library/useLibrary';
+
 
 function DraggableGame({ game, collectionId, currentGame, setCurrentGame }
     : { game: { id: number, nom: string }; collectionId: string; currentGame: { id: number, collection: string } | null; setCurrentGame: Function; }) {
@@ -54,6 +56,8 @@ export default function CollectionCard({ collection, currentGame, setCurrentGame
             collectionName: collection.collection,
         },
     });
+    const { mutate: removeCollection } = useRemoveCollection();
+
     const [open, setOpen] = useState(false);
     const over = useRef(isOver);
     over.current = isOver;
@@ -64,17 +68,30 @@ export default function CollectionCard({ collection, currentGame, setCurrentGame
     }
 
     return (
-        <Collapsible ref={setNodeRef} className={isOver && open == false ? 'bg-blue-500/20 border-2 border-dashed border-blue-500' : ''} open={open} onOpenChange={setOpen} >
+        <Collapsible ref={setNodeRef} className={ isOver && open == false ? 'bg-blue-500/20 border-2 border-dashed border-blue-500 collection' : 'collection'} open={open} onOpenChange={setOpen}  >
             <CollapsibleTrigger asChild>
                 <Button
                     variant="ghost"
                     size="sm"
                     className="group hover:bg-accent hover:text-accent-foreground w-full justify-start transition-none">
-                    <ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
-                    {collection.collection}
+                    <span className="flex items-center justify-between w-full">
+                        <span className="flex items-center gap-2 collection-title">
+                            <ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
+                            <span className="truncate ">{collection.collection}</span>
+                        </span>
+                        {collection.collection === "Todos los juegos" ? null : (
+                            <div
+                                onClick={(e) => { e.stopPropagation(); removeCollection(collection.id); }}
+                                className=" hover:text-red-400"
+                                aria-label={`Eliminar colección ${collection.collection}`}
+                            >
+                                <Trash2Icon className="h-5 w-5" />
+                            </div>
+                        )}
+                    </span>
+
                 </Button>
             </CollapsibleTrigger>
-
             <CollapsibleContent className="ml-4 mt-1">
                 <div
                     // ref={setNodeRef}
@@ -88,16 +105,20 @@ export default function CollectionCard({ collection, currentGame, setCurrentGame
                         `}>
                             <EmptyHeader className="m-0 p-0">
                                 <EmptyTitle className="text-sm sm:text-base text-center">
-                                    {isOver ? '¡Suelta aquí!' : 'Colección vacía'}
+                                    {collection.collection === "Todos los juegos" ? "Biblioteca vacía" :
+                                        isOver ? '¡Suelta aquí!' : 'Colección vacía'
+                                    }
                                 </EmptyTitle>
                             </EmptyHeader>
                             <EmptyContent className="text-xs sm:text-sm text-gray-400 text-center leading-tight">
-                                {isOver ? 'Para añadir el juego' : 'Arrastra juegos a esta colección'}
+                                {collection.collection === "Todos los juegos" ? "Compra juegos para llenar tu Biblioteca" :
+                                    isOver ? 'Para añadir el juego' : 'Arrastra juegos a esta colección'
+                                }
                             </EmptyContent>
                         </Empty>
 
                         : collection.games.map((game: { id: number, nom: string }) => (
-                            <DraggableGame key={game.id} game={game} collectionId={collection.id} currentGame={currentGame} setCurrentGame={setCurrentGame}/>
+                            <DraggableGame key={game.id} game={game} collectionId={collection.id} currentGame={currentGame} setCurrentGame={setCurrentGame} />
                         ))}
                 </div>
             </CollapsibleContent>

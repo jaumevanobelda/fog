@@ -12,3 +12,11 @@
   height: 100%;
   overflow: auto;
 }
+.collection h3{
+  max-width: 1px;
+  min-width: 100%;
+}
+.collection  .collection-title{
+  max-width: 1px;
+  min-width: 80%;
+}

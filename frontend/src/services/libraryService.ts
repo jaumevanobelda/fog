@@ -9,6 +9,10 @@ export async function addCollection(nom:string) {
     const res = await apiClientServer.post("library/collections",{nom});
     return await res.data;
 }
+export async function removeCollection(collectionId:string) {
+    const res = await apiClientServer.delete(`library/collections/${collectionId}`);
+    return await res.data;
+}
 
 export async function addGameToCollection(collectionId: string, gameId: number) {
     const res = await apiClientServer.put(`library/collections/${collectionId}`, { gameId });

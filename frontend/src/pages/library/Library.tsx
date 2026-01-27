@@ -84,7 +84,7 @@ export default function Library() {
                 <div className="library-container">
                     <ResizablePanelGroup orientation="horizontal" className="library-panel-group">
                         <ResizablePanel defaultSize="22%" minSize="15%" maxSize="50%">
-                            <div className="h-full bg-gray-900 border-r border-gray-800">
+                            <div className="h-full bg-gray-900 border-r border-gray-800 " >
                                 <ScrollArea className="h-full">
                                     {library.map((collection: any) => (
                                         <CollectionCard collection={collection} currentGame={currentGame} setCurrentGame={setCurrentGame} key={collection.id}></CollectionCard>

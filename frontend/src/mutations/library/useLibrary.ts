@@ -1,4 +1,4 @@
-import { addCollection, moveGameToCollection } from "@/services/libraryService";
+import { addCollection, moveGameToCollection, removeCollection } from "@/services/libraryService";
 import { queryClient } from "@/utils/queryClient";
 import { useMutation } from "@tanstack/react-query";
 
@@ -13,6 +13,16 @@ export function useAddCollection() {
         },
     });
 
+}
+
+
+export function useRemoveCollection() {
+    return useMutation({
+        mutationFn: removeCollection,
+        onSuccess() {
+            queryClient.invalidateQueries({ queryKey: ['getGamesLibrary'] });
+        },
+    });
 }
 
 export function useMoveGameToCollection() {
