@@ -9,8 +9,13 @@ export async function login(req: any) {
 }
 
 export async function getCurrent() {
-    const res = await apiAuth.get("auth/current");
-    return res.data;
+    if (localStorage.getItem("token") != null) {
+        const res = await apiAuth.get("auth/current");
+        return res.data;
+    } else{
+        return null;
+    }
+
 }
 
 export function logout() {

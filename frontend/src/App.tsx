@@ -7,18 +7,21 @@ import { Toaster } from "@/components/ui/sonner"
 import { QueryClientProvider } from '@tanstack/react-query'
 import { queryClient } from './utils/queryClient'
 import { UserProvider } from './context/userContext'
+import { FilterProvider } from './context/filterContext'
 
 function App() {
   return (
     <>
       <QueryClientProvider client={queryClient}>
         <UserProvider>
-          <Header />
-          <div className='mainPage'>
-            <Outlet />
-          </div>
-          <Toaster />
-          <Footer />
+          <FilterProvider>
+            <Header />
+            <div className='mainPage'>
+              <Outlet />
+            </div>
+            <Toaster />
+            <Footer />
+          </FilterProvider>
         </UserProvider>
       </QueryClientProvider>
     </>
