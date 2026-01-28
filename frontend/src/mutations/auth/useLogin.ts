@@ -9,6 +9,8 @@ export function useLogin() {
         onSuccess: (data) => {
             console.log(" Data uselogin ", data);
             localStorage.setItem('token', data.user.token);
+            console.log("DATA USER ",data.user);
+            queryClient.invalidateQueries({ queryKey: ['me'] });
             queryClient.setQueryData(['me'], data.user);
         }
     })

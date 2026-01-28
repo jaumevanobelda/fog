@@ -1,5 +1,5 @@
 export interface Game {
-  id?: number 
+  id?: number
   slug: string
   nom: string
   descripcion: string
@@ -7,6 +7,6 @@ export interface Game {
   precio: number
   images: string[]
   developer: string
-  rating?:number
-  num_reviews?:number
+  rating?: number
+  num_reviews?: number
 }

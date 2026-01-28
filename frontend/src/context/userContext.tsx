@@ -1,9 +1,10 @@
 import { createContext, useContext } from 'react'
 import { useMe } from '../queries/auth/useMe'
+import type { User } from '@/types/user'
 
 type  UserState ={
     userLogged: Boolean,
-    user?: Object
+    user?: User
 }
 
 const UserContext = createContext<UserState>({
@@ -13,9 +14,14 @@ const UserContext = createContext<UserState>({
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
     const { data } = useMe();
+    let user = null;
+    if(data){
+        user = data.usuari;
+    }
+    
     const value = {
         userLogged: !!data,
-        user: data
+        user
     }
 
     return (

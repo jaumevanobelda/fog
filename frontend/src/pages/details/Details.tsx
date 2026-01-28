@@ -4,6 +4,7 @@ import { GameImageCarousel } from '../../components/game/GameImageCarousel';
 import { Button } from '@/components/ui/button';
 import { useAddToCart } from '@/mutations/cart/useCart';
 import { toast } from 'sonner';
+import Reviews from '@/components/reviews/reviews';
 
 export default function Details() {
 
@@ -35,9 +36,9 @@ export default function Details() {
           <h1 className='text-4xl font-bold'>{game.nom}</h1>
           <h3 className='text-lg text-gray-400'>{game.descripcion}</h3>
           <div>
-            <h2 className='text-yellow-500 font-semibold'>
+            <h2 className={`text-${ratingColor()}-500 font-semibold`}>
               {game.num_reviews! >= 1 ?
-                `${game.rating}% de ${game.num_reviews} son positivas`
+                `${game.rating}% de ${game.num_reviews} reseña${(game.num_reviews! > 1)? "s":""} son positivas`
                 : "No hay reseñas"
               }
             </h2>
@@ -65,13 +66,21 @@ export default function Details() {
           </div>
 
         </div>
-      </div>
+        
+      </div><Reviews slug={game.slug}/>
     </>
   )
 
+  function ratingColor(){
+    if(game!.num_reviews === 0) return "yellow";
+    if(game!.rating! > 75) return "blue";
+    if(game!.rating! < 50) return "red";
+    return "yellow";
+  }
+
   async function addToCart() {
     try {
-      let data = await mutateAsync(game!.id);
+      let data = await mutateAsync(game!.id!);
       console.log("data ",await data);
       toast.success("Juego añadidido al carrito");
 

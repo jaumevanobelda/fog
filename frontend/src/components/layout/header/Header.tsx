@@ -3,10 +3,19 @@ import './Header.css'
 import { Link } from 'react-router-dom'
 import { logout } from "../../../services/authService";
 import Cart from '@/components/cart/Cart';
-
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 
 export default function Header() {
-  const {userLogged} =  useUser();
+  const {userLogged,user} =  useUser();
   // console.log("User ",user);
   
   return (
@@ -37,8 +46,21 @@ export default function Header() {
   function Logged() {
     return (
       <>
-        <div><button onClick={logout}>logout</button></div>
-          <Cart></Cart>
+          <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" size="icon" className="rounded-full">
+          <Avatar>
+            <AvatarImage src={user?.image} alt={user?.username} />
+            <AvatarFallback>{user?.username || "Avatar"} </AvatarFallback>
+          </Avatar>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-32">
+          <DropdownMenuItem  onClick={logout}>Log out</DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+    
+    <Cart></Cart>
       </>
     )
   }
