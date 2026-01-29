@@ -68,8 +68,9 @@ export default function Auth() {
 
             if (error.response.data.tipo == 'duplicated') {
                 setErrorSesio({ error: true, data: `Ya existe un ${error.response.data.error}` });
-            } else {
-                setErrorSesio({ error: true, data: error.response.data.error });
+            } else {  
+                // setErrorSesio({ error: true, data: error.response.data.error.message  });
+                setErrorSesio({ error: true, data: error.response.data.error.message ||error.response.data.error   || "Error inseperado" });
             }
 
         }

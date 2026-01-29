@@ -5,19 +5,15 @@ import { logout } from "../../../services/authService";
 import Cart from '@/components/cart/Cart';
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { UserRoundIcon } from 'lucide-react';
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Friends } from '@/components/user/Friends';
 
 export default function Header() {
-  const {userLogged,user} =  useUser();
+  const { userLogged, user } = useUser();
   // console.log("User ",user);
-  
+
   return (
     <>
       <div className='navmenu'>
@@ -28,7 +24,7 @@ export default function Header() {
         <div className='userMenu'>
           {userLogged ? Logged() : noLogged()}
         </div>
-        
+
       </div>
     </>
   )
@@ -46,21 +42,41 @@ export default function Header() {
   function Logged() {
     return (
       <>
-          <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="rounded-full">
-          <Avatar>
-            <AvatarImage src={user?.image} alt={user?.username} />
-            <AvatarFallback>{user?.username || "Avatar"} </AvatarFallback>
-          </Avatar>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-32">
-          <DropdownMenuItem  onClick={logout}>Log out</DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-    
-    <Cart></Cart>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <Avatar>
+                <AvatarImage src={user?.image} alt={user?.username} />
+                <AvatarFallback>{user?.username || "Avatar"} </AvatarFallback>
+              </Avatar>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-32">
+            <DropdownMenuItem onClick={logout}>Log out</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+
+        {/* <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="w-32">
+
+          </DropdownMenuContent>
+        </DropdownMenu> */}
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="ghost" size="icon" className="rounded-full">
+              <UserRoundIcon />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <Friends />
+          </PopoverContent>
+        </Popover>
+
+        <Cart></Cart>
       </>
     )
   }

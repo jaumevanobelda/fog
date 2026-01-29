@@ -4,7 +4,7 @@ import { GameImageCarousel } from '../../components/game/GameImageCarousel';
 import { Button } from '@/components/ui/button';
 import { useAddToCart } from '@/mutations/cart/useCart';
 import { toast } from 'sonner';
-import Reviews from '@/components/reviews/reviews';
+import Reviews from '@/components/reviews/Reviews';
 
 export default function Details() {
 
