@@ -31,7 +31,8 @@ export function useSendFriendRequest() {
         onSuccess(data) {
             console.log("data ",data);
             toast.success(data.message || "Solicitud enviada");
-            queryClient.invalidateQueries({ queryKey: ['Friends'] })
+            queryClient.invalidateQueries({ queryKey: ['Friends'] });
+            queryClient.invalidateQueries({ queryKey: ['SendedFriendRequests'] });
         },
         onError(error:any) {
             console.log("Error ", error);

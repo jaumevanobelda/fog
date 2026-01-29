@@ -56,22 +56,13 @@ export default function Header() {
           </DropdownMenuContent>
         </DropdownMenu>
 
-
-        {/* <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="w-32">
-
-          </DropdownMenuContent>
-        </DropdownMenu> */}
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full">
               <UserRoundIcon />
             </Button>
           </PopoverTrigger>
-          <PopoverContent>
+          <PopoverContent className="w-80 p-0" align="center">
             <Friends />
           </PopoverContent>
         </Popover>
