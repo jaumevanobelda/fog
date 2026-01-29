@@ -5,8 +5,11 @@ import Filters from '@/components/filters/Filters';
 import { useFilters } from '@/context/filterContext';
 import Search from '@/components/search/Search';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty';
-import { CircleSlash2Icon, CircleSlashIcon, FlagIcon, PackageOpen, SearchXIcon, XIcon } from 'lucide-react';
+import { SearchXIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+
+import Loading from '@/components/ui/loading';
+import { Spinner } from '@/components/ui/spinner';
 
 export default function Shop() {
 
@@ -39,7 +42,7 @@ export default function Shop() {
 
     if (isLoading) return (
       <div className="flex items-center justify-center min-h-[60vh]">
-        <p className="text-gray-400">Cargando...</p>
+        <Loading />
       </div>
     )
 
@@ -64,7 +67,10 @@ export default function Shop() {
         {
           isFetching && (
             <div className="flex justify-center py-4">
-              <p className="text-gray-400 text-sm">Cargando más...</p>
+              <div className="flex items-center gap-2">
+                <Spinner className="h-4 w-4 text-blue-500" />
+                <span className="text-gray-400 text-sm">Cargando mas...</span>
+              </div>
             </div>
           )
         }
@@ -78,7 +84,7 @@ export default function Shop() {
       <Empty className="border-2 border-dashed border-gray-700 bg-gray-800/50 rounded-lg p-12">
         <EmptyContent className="flex flex-col items-center">
           <div className="mb-4 p-4 bg-gray-700/50 rounded-full">
-            <SearchXIcon  className="h-10 w-10 " />
+            <SearchXIcon className="h-10 w-10 " />
           </div>
           <EmptyHeader className="text-center space-y-2">
             <EmptyTitle className="text-2xl font-bold text-white">

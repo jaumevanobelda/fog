@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button'
 import { useRemoveFromCart } from '@/mutations/cart/useCart'
 import { toast } from 'sonner'
 import { Trash2 } from 'lucide-react'
+import Loading from '../ui/loading'
 
 
 export default function GameCartCard({ id }: { id: any }) {
@@ -13,7 +14,7 @@ export default function GameCartCard({ id }: { id: any }) {
   const { mutateAsync: removeFromCart } = useRemoveFromCart();
 
   if (isLoading) {
-    return <p>Cargando</p>
+    return <Loading/>
   }
   if (game == null) {
     return <p> No se ha encontrado el juego</p>
@@ -21,7 +22,7 @@ export default function GameCartCard({ id }: { id: any }) {
 
   const Remove = async () => {
     try {
-      await removeFromCart(game.id);
+      await removeFromCart(game.id || -1);
     } catch (error: any) {
       console.error("Error removeFromCart ", error);
       toast.error("Error inseperado");

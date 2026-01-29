@@ -10,6 +10,7 @@ import { Slider } from '../ui/slider'
 import { useEffect, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { ScrollArea } from '../ui/scroll-area'
+import Loading from '../ui/loading'
 
 export default function Filters() {
 
@@ -53,7 +54,7 @@ export default function Filters() {
     }
 
     function menuPrecio() {
-        if (MaxPrecioIsLoading) return <p className="text-gray-400 text-sm">Cargando...</p>
+        if (MaxPrecioIsLoading) return <p className="text-gray-400 text-sm"><Loading/></p>
         return (
             <div className="space-y-3">
                 <h3 className="text-sm font-semibold text-white">Rango de Precio</h3>

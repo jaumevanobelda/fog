@@ -10,6 +10,7 @@ import { useCreateCheckoutSession } from '@/mutations/order/useOrder';
 import { toast } from 'sonner';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyMedia, EmptyTitle } from '../ui/empty';
 import { Link } from 'react-router-dom';
+import Loading from '../ui/loading';
 
 
 export default function Cart() {
@@ -36,7 +37,7 @@ export default function Cart() {
 
     function desplegable() {
         if (isLoading) {
-            return <p> Cargando</p>
+            return <Loading/>
         }
         if (data == null) {
             return <></>

@@ -6,6 +6,7 @@ import { useAddToCart } from '@/mutations/cart/useCart';
 import { toast } from 'sonner';
 import Reviews from '@/components/reviews/Reviews';
 import { useGetCart } from '@/queries/cart/useCart';
+import Loading from '@/components/ui/loading';
 
 export default function Details() {
 
@@ -14,7 +15,7 @@ export default function Details() {
   const { mutateAsync } = useAddToCart();
   const navigate = useNavigate();
 
-  if (isLoading) return <p> Cargando...</p>
+  if (isLoading) return <Loading/>
 
   if (isError) {
     console.log("Error ", error);

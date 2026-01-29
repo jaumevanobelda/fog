@@ -1,13 +1,14 @@
 import { Navigate, Outlet } from 'react-router-dom'
 import { useMe } from '../queries/auth/useMe'
 import { toast } from 'sonner';
+import Loading from '@/components/ui/loading';
 
 
 export default function PrivateRoute() {
     const { data: user, isLoading } = useMe()
 
     if (isLoading) {
-        return <> <p>Cargando</p> </>
+        return <> <Loading/> </>
     }
     console.log("USER ", user);
 

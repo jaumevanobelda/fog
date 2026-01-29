@@ -21,6 +21,7 @@ import CollectionCard from "@/components/library/CollectionCard";
 import { DndContext, DragOverlay, PointerSensor, useSensor, useSensors } from '@dnd-kit/core';
 import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { toast } from 'sonner';
+import Loading from "@/components/ui/loading";
 
 
 
@@ -71,7 +72,7 @@ export default function Library() {
     }, []);
 
 
-    if (isLoading) return <p>Cargando</p>
+    if (isLoading) return <Loading/>
 
     return (
         <>

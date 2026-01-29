@@ -1,6 +1,7 @@
 import {  useGameById } from '@/queries/games/useGame'
 import { Button } from '../ui/button';
 import { useNavigate } from 'react-router-dom';
+import Loading from '../ui/loading';
 
 
 export default function GameLibraryCard({ id }: { id: number }) {
@@ -9,7 +10,7 @@ export default function GameLibraryCard({ id }: { id: number }) {
     if (isLoading) {
         return (
             <div className='flex items-center justify-center h-full'>
-                <p className='text-gray-400'>Cargando...</p>
+                <Loading/>
             </div>
         )
     }
