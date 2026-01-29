@@ -1,5 +1,5 @@
 import type { Review } from "@/types/review";
-import { apiAuth, apiClientServer } from "./api";
+import { apiAuth} from "./api";
 
 export async function createReview(review:Review) {
     const res = await apiAuth.post(`review/${review.game_slug}`,{text:review.text,positive:review.positive});
@@ -11,8 +11,6 @@ export async function removeReview(slug:string) {
 }       
 
 export async function getReviews(slug:string) {
-    const res = await apiAuth.get(`review/${slug}`);
-    console.log("RES ",res.data);
-    
+    const res = await apiAuth.get(`review/${slug}`);    
     return await res.data.reviews;
 }       

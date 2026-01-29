@@ -8,7 +8,7 @@ export default function ReviewCard({ review }: { review: Review }) {
         <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700/50 hover:border-gray-600/50 transition-all duration-200 space-y-4">
 
             <div className="flex items-center justify-between gap-3 flex-wrap">
-                <UserCard user={review.user!} compact={true} />
+                <UserCard user={review.user!} />
                 {rating()}
             </div>
 

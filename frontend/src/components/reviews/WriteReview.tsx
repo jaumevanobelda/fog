@@ -35,7 +35,7 @@ export default function WriteReview({ slug }: { slug: string }) {
     }
     return (
         <div className="bg-gray-800/50 rounded-xl p-5 border border-gray-700/50 space-y-4">
-            <UserCard user={user} compact={true} />
+            <UserCard user={user}/>
             
             <Textarea 
                 id="textarea-message" 

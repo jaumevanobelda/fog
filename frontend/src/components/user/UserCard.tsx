@@ -6,7 +6,7 @@ import { Button } from '../ui/button';
 import { useSendFriendRequest } from '@/mutations/auth/useUser';
 import { UserPlusIcon, UserCheckIcon, ClockIcon } from 'lucide-react';
 
-export default function UserCard({ user, compact = false }: { user: User; compact?: boolean }) {
+export default function UserCard({ user}: { user: User}) {
     const { userLogged, user: Loggeduser } = useUser();
     const { data: friends } = useFriends();
     const userSame = (user.username === Loggeduser?.username);
@@ -14,7 +14,7 @@ export default function UserCard({ user, compact = false }: { user: User; compac
     const {data:sendedFriendRequests} = useSendedFriendRequests();
 
     return (
-        <div className={`flex items-center gap-3 p-3 rounded-lg bg-gray-800/40 hover:bg-gray-800/60 transition-colors duration-200 border border-gray-700/30 ${compact ? 'w-fit' : 'max-w-md'}`}>
+        <div className={`flex items-center gap-3 p-3  w-fit`}>
             
             <Avatar className="h-11 w-11 border-2 border-gray-600 shrink-0">
                 <AvatarImage src={user.image} alt={user.username} />
@@ -26,9 +26,6 @@ export default function UserCard({ user, compact = false }: { user: User; compac
             
             <div className="flex-1 min-w-0">
                 <h2 className="font-semibold text-white truncate">{user.username}</h2>
-                {user.email && !compact && (
-                    <p className="text-xs text-gray-500 truncate">{user.email}</p>
-                )}
             </div>
             
             

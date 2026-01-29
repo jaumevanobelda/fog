@@ -7,9 +7,8 @@ import Loading from '@/components/ui/loading';
 export default function PrivateRoute() {
     const { data: user, isLoading } = useMe()
 
-    if (isLoading) {
-        return <> <Loading/> </>
-    }
+    if (isLoading) return <Loading/>
+    
     console.log("USER ", user);
 
     if (!user) {

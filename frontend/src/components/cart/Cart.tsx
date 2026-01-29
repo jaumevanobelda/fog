@@ -18,7 +18,7 @@ export default function Cart() {
     let { data, isLoading } = useGetCart();
     let { mutateAsync: createCheckout, isPending } = useCreateCheckoutSession();
     const [open, setOpen] = useState(false);
-    console.log("DATA Cart", data);
+    // console.log("DATA Cart", data);
 
 
     return (
@@ -36,9 +36,8 @@ export default function Cart() {
 
 
     function desplegable() {
-        if (isLoading) {
-            return <Loading/>
-        }
+        if (isLoading) return <Loading/>
+        
         if (data == null) {
             return <></>
         }

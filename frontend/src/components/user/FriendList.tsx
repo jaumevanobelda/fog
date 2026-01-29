@@ -1,7 +1,8 @@
 import { useFriends } from "@/queries/auth/useUser";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { UsersIcon, Loader2Icon } from "lucide-react";
+import { UsersIcon } from "lucide-react";
+import Loading from "../ui/loading";
 
 
 export default function FriendList() {
@@ -9,13 +10,7 @@ export default function FriendList() {
     const { data: friends, isLoading, error } = useFriends();
     console.log("DATA ", friends);
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center py-6">
-                <Loader2Icon className="h-5 w-5 text-blue-500 animate-spin" />
-            </div>
-        )
-    }
+    if (isLoading) return <Loading/>
 
     if (error) {
         console.log("Error ", error);

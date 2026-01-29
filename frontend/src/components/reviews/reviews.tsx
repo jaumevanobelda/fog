@@ -6,19 +6,15 @@ import type { Review } from '@/types/review';
 import ReviewCard from './ReviewCard';
 import { useRemoveReview } from '@/mutations/reviews/useReview';
 import { Button } from '../ui/button';
-import { MessageSquareIcon, Trash2Icon, Loader2Icon } from 'lucide-react';
+import { MessageSquareIcon, Trash2Icon } from 'lucide-react';
+import Loading from '../ui/loading';
 
 export default function Reviews({ slug }: { slug: string }) {
-    console.log("SLUG ", slug,);
     const {  user } = useUser();
-    console.log(user?.username || "niggres");
-    
     const { data: reviews, isLoading, error } = useReviews(slug);
-    console.log("USER ",user);
     
     const { mutate: removeReview } = useRemoveReview();
     const userReview = reviews?.find((review: Review) => review.user?.username === user?.username || "");
-    console.log("userReview ", userReview);
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-8">
@@ -62,13 +58,8 @@ export default function Reviews({ slug }: { slug: string }) {
     )
     
     function allReviews() {
-        if (isLoading) {
-            return (
-                <div className="flex items-center justify-center py-12">
-                    <Loader2Icon className="h-8 w-8 text-blue-500 animate-spin" />
-                </div>
-            )
-        }
+        if (isLoading) return <Loading/>
+
         if (error) {
             console.log("Error ", error);
             return (

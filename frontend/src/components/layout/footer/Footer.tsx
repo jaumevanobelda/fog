@@ -26,14 +26,14 @@ export default function Footer() {
                 Tienda
               </Link>
               <Link 
-                to="/about" 
+                to="" 
                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
               >
                 <InfoIcon className="h-4 w-4" />
                 Sobre nosotros
               </Link>
               <Link 
-                to="/contact" 
+                to="" 
                 className="flex items-center gap-2 text-gray-400 hover:text-white transition-colors text-sm"
               >
                 <MailIcon className="h-4 w-4" />

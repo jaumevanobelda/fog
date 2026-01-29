@@ -6,7 +6,6 @@ import { useFriendRequests } from "@/queries/auth/useUser";
 
 export function Friends() {
     const { data: friendRequests } = useFriendRequests();
-    const pendingCount = friendRequests?.length || 0;
 
     return (
         <Tabs defaultValue="friendlist" className="w-full">
@@ -25,9 +24,9 @@ export function Friends() {
                     >
                         <UserPlusIcon className="h-4 w-4" />
                         <span className="text-sm font-medium">Solicitudes</span>
-                        {pendingCount > 0 && (
+                        {(friendRequests?.length || 0)  > 0 && (
                             <span className="absolute -top-1 -right-1 bg-blue-500 text-white text-[10px] font-bold rounded-full h-4 w-4 flex items-center justify-center">
-                                {pendingCount}
+                                {friendRequests?.length}
                             </span>
                         )}
                     </TabsTrigger>

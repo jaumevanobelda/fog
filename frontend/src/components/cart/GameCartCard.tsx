@@ -13,9 +13,8 @@ export default function GameCartCard({ id }: { id: any }) {
   let { data: game, isLoading } = useGame(id);
   const { mutateAsync: removeFromCart } = useRemoveFromCart();
 
-  if (isLoading) {
-    return <Loading/>
-  }
+  if (isLoading) return <Loading/>
+  
   if (game == null) {
     return <p> No se ha encontrado el juego</p>
   }

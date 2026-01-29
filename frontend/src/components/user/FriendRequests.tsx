@@ -3,7 +3,8 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { Button } from "../ui/button";
 import { useAcceptFriendRequest, useRejectFriendRequest } from "@/mutations/auth/useUser";
-import { CheckIcon, XIcon, InboxIcon, Loader2Icon } from "lucide-react";
+import { CheckIcon, XIcon, InboxIcon } from "lucide-react";
+import Loading from "../ui/loading";
 
 
 export default function FriendRequests() {
@@ -11,15 +12,9 @@ export default function FriendRequests() {
     const { data: friendRequests, isLoading, error } = useFriendRequests();
     const { mutate: acceptRequest } = useAcceptFriendRequest();
     const { mutate: rejectRequest } = useRejectFriendRequest();
-    console.log("DATA ", friendRequests);
+    // console.log("friendRequests ", friendRequests);
 
-    if (isLoading) {
-        return (
-            <div className="flex items-center justify-center py-6">
-                <Loader2Icon className="h-5 w-5 text-blue-500 animate-spin" />
-            </div>
-        )
-    }
+    if (isLoading) return <Loading/>
 
     if (error) {
         console.log("Error ", error);
