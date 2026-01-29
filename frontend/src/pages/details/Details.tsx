@@ -5,11 +5,13 @@ import { Button } from '@/components/ui/button';
 import { useAddToCart } from '@/mutations/cart/useCart';
 import { toast } from 'sonner';
 import Reviews from '@/components/reviews/Reviews';
+import { useGetCart } from '@/queries/cart/useCart';
 
 export default function Details() {
 
   const { isLoading, isError, error, data: game, } = useGame(useParams().slug!);
-  const {mutateAsync} = useAddToCart();
+  const cart = useGetCart().data?.cart;
+  const { mutateAsync } = useAddToCart();
   const navigate = useNavigate();
 
   if (isLoading) return <p> Cargando...</p>
@@ -23,7 +25,7 @@ export default function Details() {
     return <p>No se ha encontrado el juego</p>
   }
 
-  console.log("GAME ", game);
+  // console.log("GAME ", game);
 
 
   return (
@@ -38,7 +40,7 @@ export default function Details() {
           <div>
             <h2 className={`text-${ratingColor()}-500 font-semibold`}>
               {game.num_reviews! >= 1 ?
-                `${game.rating}% de ${game.num_reviews} reseña${(game.num_reviews! > 1)? "s":""} son positivas`
+                `${game.rating}% de ${game.num_reviews} reseña${(game.num_reviews! > 1) ? "s" : ""} son positivas`
                 : "No hay reseñas"
               }
             </h2>
@@ -61,43 +63,47 @@ export default function Details() {
 
           <div className='flex items-center gap-4 pt-4'>
             <h2 className='text-3xl font-bold'>{game.precio}€</h2>
-            <Button variant="outline" onClick={addToCart}>Añadir al carrito</Button>
-            
+            {game.owned
+              ? <div className='bg-blue-600 px-3 py-1 rounded'>Juego Comprado</div>
+              : cart.includes(game.id)
+                ? <div className='bg-blue-600 px-3 py-1 rounded'>Juego añadido al carrito</div>
+                : <Button variant="outline" onClick={addToCart}>Añadir al carrito</Button>
+            }
           </div>
 
         </div>
-        
-      </div><Reviews slug={game.slug}/>
+
+      </div><Reviews slug={game.slug} />
     </>
   )
 
-  function ratingColor(){
-    if(game!.num_reviews === 0) return "yellow";
-    if(game!.rating! > 75) return "blue";
-    if(game!.rating! < 50) return "red";
+  function ratingColor() {
+    if (game!.num_reviews === 0) return "yellow";
+    if (game!.rating! > 75) return "blue";
+    if (game!.rating! < 50) return "red";
     return "yellow";
   }
 
   async function addToCart() {
     try {
       let data = await mutateAsync(game!.id!);
-      console.log("data ",await data);
+      console.log("data ", await data);
       toast.success("Juego añadidido al carrito");
 
-    } catch (error:any) {
-      console.log("Error add to cart ",error);
-      if(error.response.status === 401){
+    } catch (error: any) {
+      console.log("Error add to cart ", error);
+      if (error.response.status === 401) {
         toast.error("Para añadir al carrito inicia sesión", {
           action: {
             label: "Iniciar sesion",
             onClick: () => navigate('/auth/login'),
           }
         });
-      }else{
-        toast.error("Ha ocurrido un error inseperado",{description:error.response.data.error});
+      } else {
+        toast.error("Ha ocurrido un error inseperado", { description: error.response.data.error });
       }
     }
-    
+
   }
 
 

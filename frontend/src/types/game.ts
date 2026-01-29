@@ -8,5 +8,6 @@ export interface Game {
   images: string[]
   developer: string
   rating?: number
-  num_reviews?: number
+  num_reviews?: number,
+  owned?:boolean
 }
