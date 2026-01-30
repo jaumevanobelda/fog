@@ -18,6 +18,26 @@ module Api
           # render json: JSON.parse(response.body)
         end
 
+        def get_categoria
+            proxy_get("#{AUTH_SERVICE}/categoria/#{params[:slug]}")
+        end
+
+        def get_categories
+            proxy_get("#{AUTH_SERVICE}/categoria")
+        end
+            
+        def post_categoria
+            proxy(:post, "#{AUTH_SERVICE}/categoria")
+        end
+
+        def put_categoria
+            proxy(:put, "#{AUTH_SERVICE}/categoria/#{params[:slug]}")
+        end
+
+        def delete_categoria
+            proxy(:delete, "#{AUTH_SERVICE}/categoria/#{params[:slug]}")
+        end
+
 
         #   UTILS
 
@@ -45,7 +65,7 @@ module Api
             headers["Content-Type"] = "application/json"
             headers["User-Id"] = @user_id.to_s if @user_id
             headers["User-Role"] = @role if @role
-            response = Faraday.run_request(method, url, body.to_json,headers)
+            response = Faraday.run_request(method, url, body.to_json, headers)
             render json: JSON.parse(response.body), status: response.status
         end
 
