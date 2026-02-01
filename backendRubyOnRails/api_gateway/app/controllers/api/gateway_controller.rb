@@ -2,7 +2,8 @@ module Api
     class GatewayController < ApplicationController
         AUTH_SERVICE   = "http://localhost:3001"
         GAMES_SERVICE = "http://localhost:3002"
-        before_action -> { authenticate("ADMIN") }, only: %i[games ]
+        before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria ]
+        before_action -> { authenticate(["ADMIN","DEVELOPER"]) }, only: %i[get_game get_games post_game put_game delete_game]
 
         def login
             proxy(:post, "#{AUTH_SERVICE}/api/auth/login")
@@ -10,12 +11,6 @@ module Api
 
         def register
             proxy(:post, "#{AUTH_SERVICE}/api/auth/register")
-        end
-
-        def games
-            proxy_get("#{GAMES_SERVICE}/api/games")
-          # response = Faraday.get("#{GAMES_SERVICE}/api/games")
-          # render json: JSON.parse(response.body)
         end
 
         def get_categoria
@@ -36,6 +31,26 @@ module Api
 
         def delete_categoria
             proxy(:delete, "#{AUTH_SERVICE}/categoria/#{params[:slug]}")
+        end
+
+        def get_game
+            proxy_get("#{GAMES_SERVICE}/game/#{params[:slug]}")
+        end
+
+        def get_games
+            proxy_get("#{GAMES_SERVICE}/game")
+        end
+            
+        def post_game
+            proxy(:post, "#{GAMES_SERVICE}/game")
+        end
+
+        def put_game
+            proxy(:put, "#{GAMES_SERVICE}/game/#{params[:slug]}")
+        end
+
+        def delete_game
+            proxy(:delete, "#{GAMES_SERVICE}/game/#{params[:slug]}")
         end
 
 

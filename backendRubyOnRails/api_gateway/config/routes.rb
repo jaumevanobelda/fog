@@ -5,8 +5,14 @@ Rails.application.routes.draw do
       post "register", to: "gateway#register"
     end
 
-    scope :games do
-      get "", to: "gateway#games"
+    scope :game do
+      post "", to: "gateway#post_game"
+      get "", to: "gateway#get_games"
+      get ":slug", to: "gateway#get_game"
+      put ":slug", to: "gateway#put_game"
+      delete ":slug", to: "gateway#delete_game"
+    end
+    
     end
     scope :categoria do
       post "", to: "gateway#post_categoria"
