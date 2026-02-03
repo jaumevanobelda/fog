@@ -1,4 +1,4 @@
-class Categoria < ApplicationRecord
+class Category < ApplicationRecord
     before_save :generate_slug
     before_save :defineIsActive
     # validates :id, presence: true

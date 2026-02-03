@@ -10,9 +10,36 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_01_153113) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_02_193811) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.boolean "isActive", default: true, null: false
+    t.string "nom"
+    t.string "slug"
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_categories_on_slug", unique: true
+  end
+
+  create_table "game_categories", force: :cascade do |t|
+    t.bigint "category_id", null: false
+    t.datetime "created_at", null: false
+    t.bigint "game_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["category_id"], name: "index_game_categories_on_category_id"
+    t.index ["game_id", "category_id"], name: "index_game_categories_on_game_id_and_category_id", unique: true
+    t.index ["game_id"], name: "index_game_categories_on_game_id"
+  end
+
+  create_table "game_images", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "game_id", null: false
+    t.string "image"
+    t.datetime "updated_at", null: false
+    t.index ["game_id"], name: "index_game_images_on_game_id"
+  end
 
   create_table "games", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -25,4 +52,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_01_153113) do
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_games_on_slug", unique: true
   end
+
+  add_foreign_key "game_categories", "categories"
+  add_foreign_key "game_categories", "games"
+  add_foreign_key "game_images", "games"
 end
