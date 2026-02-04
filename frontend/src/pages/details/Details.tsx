@@ -49,7 +49,7 @@ export default function Details() {
           <div>
             <h1 className='text-2xl font-bold mb-2'>Categorias:</h1>
             <div className='flex flex-wrap gap-2'>
-              {game.categorias.map((categoria: string) => {
+              {game.categories.map((categoria: string) => {
                 return (
                   <div key={categoria} className='bg-gray-700 px-3 py-1 rounded'>
                     <h1 className='text-sm'>{categoria}</h1>

@@ -1,0 +1,6 @@
+{
+    "scripts": {
+    "frontend": "cd frontend && npm run dev",
+    "backendRubyOnRails":"cd backendRubyOnRails && concurrently --names \"Api_gateway,Categories,Games\" --prefix-colors \"red,yellow,blue,\" \"cd api_gateway && rails server\" \"cd categories && rails server\" \"cd games && rails server\" "
+  }
+}

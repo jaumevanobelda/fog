@@ -3,11 +3,20 @@ export interface Game {
   slug: string
   nom: string
   descripcion: string
-  categorias: string[]
+  categories: string[]
   precio: number
   images: string[]
   developer: string
   rating?: number
-  num_reviews?: number,
-  owned?:boolean
+  num_reviews?: number
+  owned?: boolean
+  isActive?: boolean
 }
+export interface GameFormData {
+	nom: string
+	precio: number
+	descripcion: string
+	categories: string[]
+	images: string[]
+}
+

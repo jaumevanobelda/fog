@@ -14,13 +14,9 @@ class Game < ApplicationRecord
     def generate_slug
         self.slug = nom.parameterize
     end
-
-    def deactivate
-        self.isActive = false
-    end
-
+    
     def as_json
         super({ only: %i[slug nom descripcion precio developer isActive ] }).merge(
-        categories: categories.pluck(:nom), images: game_images.pluck(:image))
+        categories: categories.pluck(:slug), images: game_images.pluck(:image))
     end
 end

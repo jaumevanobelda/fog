@@ -1,5 +1,5 @@
 class CategoriesController < ApplicationController
-    before_action :set_category, only: %i[show update destroy]
+    before_action :set_category, only: %i[show update destroy activate]
     def index
         render json: Category.all
     end
@@ -24,18 +24,23 @@ class CategoriesController < ApplicationController
             render json: { errors: @category.errors }, status: :unprocessable_entity
         end
     end
-    
+
     def destroy
-        @category.deactivate
-        render json: { message: "Category desactivada" }
+        @category.update({ isActive: false })
+        render json: { message: "Categoria desactivada" }
+    end
+
+    def activate
+        @category.update({ isActive: true })
+        render json: { message: "Categoria activada" }
     end
 
     def category_params
-        params.require(:categoria).permit(:nom, :isActive)
+        params.require(:categoria).permit(:nom)
     end
-
+    
     def set_category
-        @category = Category.find_by_slug(params[:id])
-        render json: {error:"No se ha encontrado la category"} if @category == nil 
+        @category = Category.find_by_slug(params[:slug])
+        render json: { error: "No se ha encontrado la categoria" } if @category == nil
     end
 end

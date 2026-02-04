@@ -2,7 +2,7 @@ import axios from "axios";
 import { logout } from "./authService";
 
 const API_CLIENT_SERVER_URL = "http://localhost:3000";
-const API_AUTH_URL = "http://localhost:3000";
+const API_AUTH_URL = "http://localhost:3000/api";
 
 export const apiClientServer = axios.create({
     baseURL: API_CLIENT_SERVER_URL,

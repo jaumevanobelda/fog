@@ -1,36 +1,40 @@
 module Api
     class GatewayController < ApplicationController
-        AUTH_SERVICE   = "http://localhost:3001"
+        CATEGORIES_SERVICE   = "http://localhost:3001"
         GAMES_SERVICE = "http://localhost:3002"
-        before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria ]
-        before_action -> { authenticate(["ADMIN","DEVELOPER"]) }, only: %i[get_game get_games post_game put_game delete_game]
+        # before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game ]
+        # before_action -> { authenticate(["ADMIN","DEVELOPER"]) }, only: %i[get_game get_games post_game put_game delete_game]
 
         def login
-            proxy(:post, "#{AUTH_SERVICE}/api/auth/login")
+            proxy(:post, "#{CATEGORIES_SERVICE}/api/auth/login")
         end
 
         def register
-            proxy(:post, "#{AUTH_SERVICE}/api/auth/register")
+            proxy(:post, "#{CATEGORIES_SERVICE}/api/auth/register")
         end
 
         def get_categoria
-            proxy_get("#{AUTH_SERVICE}/categoria/#{params[:slug]}")
+            proxy_get("#{CATEGORIES_SERVICE}/categoria/#{params[:slug]}")
         end
 
         def get_categories
-            proxy_get("#{AUTH_SERVICE}/categoria")
+            proxy_get("#{CATEGORIES_SERVICE}/categories")
         end
-            
+
         def post_categoria
-            proxy(:post, "#{AUTH_SERVICE}/categoria")
+            proxy(:post, "#{CATEGORIES_SERVICE}/categories")
         end
 
         def put_categoria
-            proxy(:put, "#{AUTH_SERVICE}/categoria/#{params[:slug]}")
+            proxy(:put, "#{CATEGORIES_SERVICE}/categories/#{params[:slug]}")
         end
 
         def delete_categoria
-            proxy(:delete, "#{AUTH_SERVICE}/categoria/#{params[:slug]}")
+            proxy(:delete, "#{CATEGORIES_SERVICE}/categories/#{params[:slug]}")
+        end
+
+        def activate_categoria
+            proxy(:put, "#{CATEGORIES_SERVICE}/categories/activate/#{params[:slug]}")
         end
 
         def get_game
@@ -40,7 +44,7 @@ module Api
         def get_games
             proxy_get("#{GAMES_SERVICE}/game")
         end
-            
+
         def post_game
             proxy(:post, "#{GAMES_SERVICE}/game")
         end
@@ -51,6 +55,10 @@ module Api
 
         def delete_game
             proxy(:delete, "#{GAMES_SERVICE}/game/#{params[:slug]}")
+        end
+
+        def activate_game
+            proxy(:put, "#{GAMES_SERVICE}/game/activate/#{params[:slug]}")
         end
 
 
@@ -73,7 +81,7 @@ module Api
 
 
         def proxy(method, url)
-            body = JSON.parse(request.raw_post)
+            body = request.raw_post.present? ? JSON.parse(request.raw_post) : {}
             # body.merge!(user_id: @user_id) if @user_id
             # body.merge!(role: @role) if @role
             headers = {}

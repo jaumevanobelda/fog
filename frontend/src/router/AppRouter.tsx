@@ -7,6 +7,8 @@ import CheckoutSuccess from "../pages/checkout/CheckoutSuccess";
 import CheckoutCancel from "../pages/checkout/CheckoutCancel";
 import PrivateRoute from "@/guards/PrivateRoute";
 import Library from "@/pages/library/Library";
+import DashboardGames from "@/pages/dashboardGames/DashboardGames";
+import DashboardCategories from "@/pages/dashboardCategories/DashboardCategories";
 
 export default function AppRouter() {
   return (
@@ -21,6 +23,8 @@ export default function AppRouter() {
           <Route element={<PrivateRoute />}>
             <Route path="library" element={<Library />} />
           </Route>
+          <Route path="dashboardGames" element={<DashboardGames />} />
+          <Route path="dashboardCategories" element={<DashboardCategories />} />
         </Route>
       </Routes>
     </BrowserRouter>)
