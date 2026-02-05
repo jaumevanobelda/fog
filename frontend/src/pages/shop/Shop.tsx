@@ -10,11 +10,14 @@ import { Button } from '@/components/ui/button';
 
 import Loading from '@/components/ui/loading';
 import { Spinner } from '@/components/ui/spinner';
+import { useDebounce } from '@/components/debounced/debounced';
 
 export default function Shop() {
-
-  const { filters, resetFilters } = useFilters();
-  const { isLoading, isError, error, isFetching, data: games } = useGames(filters);
+  const { filters, resetFilters } = useFilters(); 
+  
+  const debouncedFilters= useDebounce(filters);
+  
+  const { isLoading, isError, error, isFetching, data: games } = useGames(debouncedFilters);
 
 
 

@@ -9,7 +9,7 @@ export default function GameList ({games}:{games: Game[]}){
             <div className="gamesList">
                 {
                     games.map((game: Game) => {
-                        return <GameCard game={game} key={game.id}></GameCard>
+                        return <GameCard game={game} key={game.slug}></GameCard>
                     })
                 }
             </div>
