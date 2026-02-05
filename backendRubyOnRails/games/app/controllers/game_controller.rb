@@ -15,7 +15,7 @@ class GameController < ApplicationController
     def create
         return render json: { error: "Ya existe un juego con ese nombre" }, status: :conflict if Game.find_by_slug(params[:game][:nom].parameterize)
         game_data = game_params
-        game_data[:developer] = request.headers["User-Id"]
+        game_data[:developer] = request.headers["User-Id"] || 1  #BORRAR
         game = Game.new(game_data)
         if game.save
             game.category_ids = Category.where(slug: params[:game][:categories]).pluck(:id)
@@ -66,5 +66,16 @@ class GameController < ApplicationController
         if request.headers["User-Role"] == "DEVELOPER"
             render json: { error: "No tienes permisos" } if @game.developer != request.headers["User-Id"]&.to_i
         end
+    end
+
+    def filter
+        games = Game.where(isActive: true)
+                        .filter_by_precio(params[:minPrecio],params[:maxPrecio])
+                        .filter_by_search(params[:search])
+                        .filter_by_categories(params[:categories])
+                        .sort_by_field(params[:sortField],params[:sortAsc])
+        render json: games 
+
+        
     end
 end

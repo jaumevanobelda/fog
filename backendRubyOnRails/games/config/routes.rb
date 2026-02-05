@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
-  resources :game,param: :slug
   scope :game do
 		put 'activate/:slug', to: 'game#activate'
+    get 'filter', to: 'game#filter'
   end
+  resources :game,param: :slug
+  
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

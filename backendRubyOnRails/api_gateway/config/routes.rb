@@ -17,6 +17,7 @@ Rails.application.routes.draw do
     scope :game do
       post "", to: "gateway#post_game"
       get "", to: "gateway#get_games"
+      get "filter", to: "gateway#get_filtered_games"
       get ":slug", to: "gateway#get_game"
       put ":slug", to: "gateway#put_game"
       delete ":slug", to: "gateway#delete_game"

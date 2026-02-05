@@ -45,6 +45,10 @@ module Api
             proxy_get("#{GAMES_SERVICE}/game")
         end
 
+        def get_filtered_games
+            proxy_get("#{GAMES_SERVICE}/game/filter")
+        end
+
         def post_game
             proxy(:post, "#{GAMES_SERVICE}/game")
         end
