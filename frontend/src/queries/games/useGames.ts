@@ -5,11 +5,10 @@ import { getGames } from '../../services/gameService'
 import type { Game } from '../../types/game'
 import type { Filter } from '@/types/filter'
 
-export function useGames(filters: Filter) {
-  return useQuery<Game[]>({
-    queryKey: ['games',filters],
-    queryFn: () => getGames(filters),
-    //   keepPreviousData: true
+export function useGames(filters: Filter,page:number,limit:number) {
+  return useQuery<{games:Game[],total:number}>({
+    queryKey: ['games',filters,page,limit],
+    queryFn: () => getGames(filters,page,limit),
   })
 }
 

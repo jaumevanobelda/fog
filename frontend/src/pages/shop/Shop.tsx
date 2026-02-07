@@ -7,18 +7,22 @@ import Search from '@/components/search/Search';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty';
 import { SearchXIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-
 import Loading from '@/components/ui/loading';
 import { Spinner } from '@/components/ui/spinner';
 import { useDebounce } from '@/components/debounced/debounced';
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { useState } from 'react';
 
+const gamesPerPage = 12;
 export default function Shop() {
-  const { filters, resetFilters } = useFilters(); 
-  
-  const debouncedFilters= useDebounce(filters);
-  
-  const { isLoading, isError, error, isFetching, data: games } = useGames(debouncedFilters);
+  const { filters, resetFilters } = useFilters();
 
+  const debouncedFilters = useDebounce(filters);
+
+
+  const [page, setPage] = useState(1);
+  const { isLoading, isError, error, isFetching, data } = useGames(debouncedFilters,page || 1,gamesPerPage);
+  console.log("Page ",page);
 
 
 
@@ -57,6 +61,7 @@ export default function Shop() {
         </div>
       )
     }
+    const { games, total } = data!;
 
     return (
       <>
@@ -66,8 +71,8 @@ export default function Shop() {
             : noGames()
           }
         </div>
-
-        {
+        {pagination(total || 0)}
+        {/* {
           isFetching && (
             <div className="flex justify-center py-4">
               <div className="flex items-center gap-2">
@@ -76,7 +81,7 @@ export default function Shop() {
               </div>
             </div>
           )
-        }
+        } */}
       </>
     )
 
@@ -108,6 +113,45 @@ export default function Shop() {
         </EmptyContent>
       </Empty>
     )
+  }
+
+  function pagination(total: number) {
+
+    const totalPages: number = Math.ceil(total / gamesPerPage) || 1
+    if(totalPages == 1) return <></>
+    
+    const pages = []
+    const nextPage = () => {
+      if (page >= totalPages) return page
+      return page + 1
+    }
+    const previousPage = () => {
+      if (page <= 1) return page
+      return page - 1
+    }
+    for (let i = 1; i <= totalPages; i++) pages.push(i)
+    
+    return (
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious onClick={() => setPage(previousPage())} />
+          </PaginationItem>
+          {
+            pages.map((pagenum) => (
+              <PaginationItem key={pagenum}>
+                <PaginationLink isActive={page === pagenum} onClick={() => setPage(pagenum)}>{pagenum}</PaginationLink>
+              </PaginationItem>
+            ))
+          }
+          <PaginationItem>
+            <PaginationNext onClick={() => setPage(nextPage())} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    )
+
+
   }
 }
 

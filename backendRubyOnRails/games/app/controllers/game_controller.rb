@@ -15,7 +15,7 @@ class GameController < ApplicationController
     def create
         return render json: { error: "Ya existe un juego con ese nombre" }, status: :conflict if Game.find_by_slug(params[:game][:nom].parameterize)
         game_data = game_params
-        game_data[:developer] = request.headers["User-Id"] || 1  #BORRAR
+        game_data[:developer] = request.headers["User-Id"] || 1  # BORRAR
         game = Game.new(game_data)
         if game.save
             game.category_ids = Category.where(slug: params[:game][:categories]).pluck(:id)
@@ -69,13 +69,15 @@ class GameController < ApplicationController
     end
 
     def filter
-        games = Game.where(isActive: true)
-                        .filter_by_precio(params[:minPrecio],params[:maxPrecio])
+        query = Game.where(isActive: true)
+                        .filter_by_precio(params[:minPrecio], params[:maxPrecio])
                         .filter_by_search(params[:search])
                         .filter_by_categories(params[:categories])
-                        .sort_by_field(params[:sortField],params[:sortAsc])
-        render json: games 
-
+                        .sort_by_field(params[:sortField], params[:sortAsc])
+        total = query.count
+        puts total
+        games = query.offset(((params[:page]&.to_i || 1) -1) * (params[:limit]&.to_i || 12)).limit(params[:limit]&.to_i || 12)
         
+        render json: { games: games, total: total }
     end
 end

@@ -2,7 +2,7 @@ import type { Filter } from '@/types/filter';
 import { apiAuth, apiClientServer } from './api'
 
 
-export async function getGames(filters: Filter) {
+export async function getGames(filters: Filter,page:number,limit:number) {
   // console.log("GET GAMES ", filters);
 
   const params = new URLSearchParams();
@@ -27,6 +27,11 @@ export async function getGames(filters: Filter) {
     params.append('sortField', filters.sort.field);
     params.append('sortAsc', filters.sort.asc.toString());
   }
+
+  params.append('page', page.toString() || "1");
+  params.append('limit', limit.toString() || "12" );
+
+
   const queryString = params.toString();
   console.log("params ", params.toString());
   console.log(" TEST ", JSON.stringify(filters));
