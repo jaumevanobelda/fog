@@ -12,3 +12,7 @@
 .shop-content {
   margin-top: 1.5rem;
 }
+
+.pagination a:hover {
+  cursor: pointer;
+}

@@ -1,8 +1,7 @@
 import './Filters.css'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger, } from "@/components/ui/sheet"
+import { Sheet, SheetContent,  SheetHeader, SheetTitle, SheetTrigger, } from "@/components/ui/sheet"
 import { Button } from '../ui/button'
 import { FilterIcon, ArrowUpIcon, ArrowDownIcon, Trash2Icon } from 'lucide-react'
-import { useFilters } from '@/context/filterContext'
 import { useGameCategorias, useMaxPrecioGame } from '@/queries/games/useGame'
 import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Checkbox } from '../ui/checkbox'
@@ -11,19 +10,19 @@ import { useEffect, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select'
 import { ScrollArea } from '../ui/scroll-area'
 import Loading from '../ui/loading'
+import type { Filter } from '@/types/filter'
 
-export default function Filters() {
+export default function Filters({filters,setFilters,resetFilters}:{filters:Filter,setFilters:Function,resetFilters:Function}) {
 
-    const { filters, setPrecio, setCategorias, setSort, resetFilters } = useFilters();
     const { data: categorias } = useGameCategorias();
     const { data: maxPrecio, isLoading: MaxPrecioIsLoading } = useMaxPrecioGame();
-    const [open,setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
 
     useEffect(() => {
         if (filters.maxPrecio == undefined) {
             console.log("maxPrecio ", maxPrecio);
 
-            setPrecio([filters.minPrecio, maxPrecio]);
+            setPrecio([filters.minPrecio, maxPrecio || 9999]);
         }
     }, [maxPrecio]);
 
@@ -43,7 +42,7 @@ export default function Filters() {
                 <Button
                     variant="destructive"
                     className="w-full gap-2"
-                    onClick={() =>{ resetFilters() ; setOpen(false)}}
+                    onClick={() => { resetFilters(); setOpen(false) }}
                     disabled={activeFiltersCount === 0}
                 >
                     <Trash2Icon className="h-4 w-4" />
@@ -54,7 +53,7 @@ export default function Filters() {
     }
 
     function menuPrecio() {
-        if (MaxPrecioIsLoading) return <p className="text-gray-400 text-sm"><Loading/></p>
+        if (MaxPrecioIsLoading) return <p className="text-gray-400 text-sm"><Loading /></p>
         return (
             <div className="space-y-3">
                 <h3 className="text-sm font-semibold text-white">Rango de Precio</h3>
@@ -147,6 +146,43 @@ export default function Filters() {
         )
     }
 
+    function setPrecio(precios: Array<number>) {
+        // console.log("SET PRECIO ", { filters, precios });
+        setFilters((value:Filter) => {
+            value.minPrecio = precios[0];
+            value.maxPrecio = precios[1];
+            return { ...value };
+        })
+    }
+    function setCategorias(categoria: string) {
+        // console.log("SET categorias ", { filters, categoria });
+
+        setFilters((value:Filter) => {
+            let index = value.categorias.findIndex((value) => value === categoria);
+            console.log(index);
+            if (index === -1) {
+                value.categorias.push(categoria)
+            } else {
+                value.categorias.splice(index, 1);
+            }
+
+            return { ...value }
+        })
+    }
+    function setSort(field: string, asc: boolean) {
+        // console.log("SET sort ", { filters, sort: { field, asc } });
+
+        if (field === " ") {
+            field = "";
+        }
+
+        setFilters((value:Filter) => {
+            value.sort = { field, asc }
+            return { ...value }
+        })
+    }
+    
+
     return (
         <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -160,7 +196,7 @@ export default function Filters() {
                     )}
                 </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="bg-gray-900 border-gray-800 w-80" aria-describedby={undefined}> 
+            <SheetContent side="left" className="bg-gray-900 border-gray-800 w-80" aria-describedby={undefined}>
                 <SheetHeader className="border-b border-gray-800 pb-4">
                     <SheetTitle className="text-white text-lg">Filtros de búsqueda</SheetTitle>
                 </SheetHeader>

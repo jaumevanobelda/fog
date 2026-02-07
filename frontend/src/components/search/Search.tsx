@@ -1,14 +1,22 @@
-import { useFilters } from '@/context/filterContext';
 import './Search.css'
 import { Input } from '../ui/input';
 import { XIcon, SearchIcon } from 'lucide-react';
+import type { Filter } from '@/types/filter';
 
 
-export default function Search() {
+export default function Search({ filters, setFilters }: { filters: Filter, setFilters: Function }) {
 
-    const { setSearch, filters } = useFilters();
+    function setSearch(search: string) {
+        // console.log("SET search ", { filters, search });
+
+        setFilters((value: Filter) => {
+            value.search = search;
+            return { ...value }
+        })
+    }
+
     return (
-    <div className="search-container flex-1 max-w-lg">
+        <div className="search-container flex-1 max-w-lg">
             <div className="relative w-full">
                 <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <Input

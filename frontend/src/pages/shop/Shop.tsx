@@ -2,29 +2,60 @@ import './Shop.css'
 import { useGames } from '../../queries/games/useGames';
 import GameList, { } from '../../components/game/GameList';
 import Filters from '@/components/filters/Filters';
-import { useFilters } from '@/context/filterContext';
 import Search from '@/components/search/Search';
 import { Empty, EmptyContent, EmptyDescription, EmptyHeader, EmptyTitle } from '@/components/ui/empty';
 import { SearchXIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Loading from '@/components/ui/loading';
-import { Spinner } from '@/components/ui/spinner';
 import { useDebounce } from '@/components/debounced/debounced';
-import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { useState } from 'react';
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
+import { useEffect, useState } from 'react';
+import type { Filter } from '@/types/filter';
 
 const gamesPerPage = 12;
+
+function defaultFilters() {
+  return {
+    // developer: "",
+    minPrecio: 0,
+    maxPrecio: undefined,
+    categorias: [],
+    search: "",
+    sort: { field: "", asc: true }
+  }
+}
+let initialLoad = true;
+
+function initialFilters() {
+  if (localStorage.getItem("filters")) {
+    return JSON.parse(localStorage.getItem("filters")!)
+  }
+  return defaultFilters();
+}
+
 export default function Shop() {
-  const { filters, resetFilters } = useFilters();
+  const [filters, setFilters] = useState<Filter>(initialFilters());
 
-  const debouncedFilters = useDebounce(filters);
+  const debouncedFilters = useDebounce(filters, 300);
+  const [page, setPage] = useState(parseInt(localStorage.getItem('page') || "1"));
 
+  useEffect(() => {
+    // if( JSON.stringify(debouncedFilters) ==  JSON.stringify(initialFilters()) && parseInt(localStorage.getItem('page')!) == page ) return
+    if (initialLoad) {
+      initialLoad = false;
+      return;
+    }
+    localStorage.setItem('filters', JSON.stringify(filters));
+    setPage(1);
+    console.log("DEBOUNCE ", debouncedFilters, initialFilters());
 
-  const [page, setPage] = useState(1);
-  const { isLoading, isError, error, isFetching, data } = useGames(debouncedFilters,page || 1,gamesPerPage);
-  console.log("Page ",page);
+  }, [debouncedFilters]);
 
+  useEffect(() => {
+    localStorage.setItem('page', page.toString());
+  }, [page]);
 
+  const { isLoading, isError, error, data } = useGames(debouncedFilters, page || 1, gamesPerPage);
 
   return (
     <div className="shop-container">
@@ -34,13 +65,15 @@ export default function Shop() {
     </div>
   )
 
+
+
   function shopHeader() {
     return (
       <div className="shop-header">
         <h1 className="text-3xl font-bold text-white mb-6">Tienda</h1>
         <div className="flex items-center gap-4 w-full max-w-2xl mx-auto max-w-lg">
-          <Filters />
-          <Search />
+          <Filters filters={filters} setFilters={setFilters} resetFilters={resetFilters} />
+          <Search filters={filters} setFilters={setFilters} />
         </div>
       </div>
     )
@@ -72,16 +105,6 @@ export default function Shop() {
           }
         </div>
         {pagination(total || 0)}
-        {/* {
-          isFetching && (
-            <div className="flex justify-center py-4">
-              <div className="flex items-center gap-2">
-                <Spinner className="h-4 w-4 text-blue-500" />
-                <span className="text-gray-400 text-sm">Cargando mas...</span>
-              </div>
-            </div>
-          )
-        } */}
       </>
     )
 
@@ -118,8 +141,8 @@ export default function Shop() {
   function pagination(total: number) {
 
     const totalPages: number = Math.ceil(total / gamesPerPage) || 1
-    if(totalPages == 1) return <></>
-    
+    if (totalPages <= 1) return <></>
+
     const pages = []
     const nextPage = () => {
       if (page >= totalPages) return page
@@ -130,9 +153,9 @@ export default function Shop() {
       return page - 1
     }
     for (let i = 1; i <= totalPages; i++) pages.push(i)
-    
+
     return (
-      <Pagination>
+      <Pagination className='pagination'>
         <PaginationContent>
           <PaginationItem>
             <PaginationPrevious onClick={() => setPage(previousPage())} />
@@ -150,8 +173,10 @@ export default function Shop() {
         </PaginationContent>
       </Pagination>
     )
-
-
+  }
+  function resetFilters() {
+    localStorage.removeItem("filters");
+    setFilters(defaultFilters());
   }
 }
 
