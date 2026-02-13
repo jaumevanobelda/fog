@@ -19,6 +19,7 @@ func NewGameHandler(repo_game repository.GameRepository) *GameHandler {
 func (h *GameHandler) GetGame(c *gin.Context) {
 	game, err := h.repo_game.FindOne(c.Param("slug"))
 	if err != nil {
+		fmt.Println(err)
 		c.JSON(http.StatusNotFound, gin.H{"error": err})
 		return
 	}
@@ -34,14 +35,3 @@ func (h *GameHandler) GetMaxPrecio(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, maxPrecio)
 }
-
-// func CreateGame(c *gin.Context) {
-// 	var game models.Game
-// 	err := c.ShouldBindJSON(&game)
-// 	if err != nil {
-// 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-// 		return
-// 	}
-// 	database.DB.Create(&game)
-// 	c.JSON(http.StatusOK, game)
-// }

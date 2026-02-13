@@ -30,7 +30,6 @@ func main() {
 	categoryRepo := repository.NewCategoryRepository(database.DB)
 	categoryHandler := handler.NewCategoryHandler(categoryRepo)
 	routes.Setup(gameHandler, categoryHandler, r)
-	fmt.Println(":" + os.Getenv("PORT"))
 	r.Run(":" + os.Getenv("PORT"))
-	fmt.Println("Go arrancado ")
+	fmt.Println("Games arrancado ")
 }

@@ -48,13 +48,13 @@ export async function getGame(slug: string) {
 }
 
 export async function getCategorias() {
-  const res = await apiClientServer.get(`games/categorias`);
+  const res = await apiClientServer.get(`games/categories`);
   return res.data;
 }
 
 export async function getMaxPrecio() {
   const res = await apiClientServer.get(`games/maxPrecio`);
-  return res.data.maxPrecio;
+  return res.data;
 }
 
 export async function getGameById(id: number) {

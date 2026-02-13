@@ -66,7 +66,7 @@ export default function Details() {
             <h2 className='text-3xl font-bold'>{game.precio}€</h2>
             {game.owned
               ? <div className='bg-blue-600 px-3 py-1 rounded'>Juego Comprado</div>
-              : cart.includes(game.id)
+              : ( cart != null && cart.includes(game.id)) 
                 ? <div className='bg-blue-600 px-3 py-1 rounded'>Juego añadido al carrito</div>
                 : <Button variant="outline" onClick={addToCart}>Añadir al carrito</Button>
             }

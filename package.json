@@ -1,6 +1,8 @@
 {
     "scripts": {
     "frontend": "cd frontend && npm run dev",
-    "backendRubyOnRails":"cd backendRubyOnRails && concurrently --names \"Api_gateway,Categories,Games\" --prefix-colors \"red,yellow,blue,\" \"cd api_gateway && rails server\" \"cd categories && rails server\" \"cd games && rails server\" "
+    "backendRubyOnRails":"cd backendRubyOnRails && concurrently --names \"Api_gateway,Categories,Games\" --prefix-colors \"red,yellow,blue,\" \"cd api_gateway && rails server\" \"cd categories && rails server\" \"cd games && rails server\" ",
+    "backendGo":"cd backendGo && concurrently --names \"Api_gateway,Games\" --prefix-colors \"red,blue\" \"cd api_gateway && air \" \"cd games && air\" ",
+    "backend":"concurrently --names \"Rails,Go\" --prefix-colors \"red,yellow\" \"npm run backendRubyOnRails\" \"npm run backendGo\" "
   }
 }
