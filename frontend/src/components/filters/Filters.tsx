@@ -19,9 +19,7 @@ export default function Filters({filters,setFilters,resetFilters}:{filters:Filte
     const [open, setOpen] = useState<boolean>(false);
 
     useEffect(() => {
-        if (filters.maxPrecio == undefined) {
-            console.log("maxPrecio ", maxPrecio);
-
+        if (filters.maxPrecio == undefined && maxPrecio != undefined) {
             setPrecio([filters.minPrecio, maxPrecio || 9999]);
         }
     }, [maxPrecio]);
@@ -62,9 +60,9 @@ export default function Filters({filters,setFilters,resetFilters}:{filters:Filte
                     <span className="text-gray-400">{filters.maxPrecio || maxPrecio}€</span>
                 </div>
                 <Slider
-                    defaultValue={[filters.minPrecio, filters.maxPrecio || 100]}
-                    onValueChange={(te) => setPrecio(te)}
-                    max={maxPrecio || 100}
+                    defaultValue={[filters.minPrecio, filters.maxPrecio || 500]}
+                    onValueChange={(precios) => setPrecio(precios)}
+                    max={maxPrecio || 300}
                     min={0}
                     step={1}
                     className="w-full"
