@@ -2,15 +2,20 @@ module Api
     class GatewayController < ApplicationController
         CATEGORIES_SERVICE   = "http://localhost:3001"
         GAMES_SERVICE = "http://localhost:3002"
-        # before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game ]
-        # before_action -> { authenticate(["ADMIN","DEVELOPER"]) }, only: %i[get_game get_games post_game put_game delete_game]
-
+        AUTH_SERVICE = "http://localhost:3003"
+        before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game ]
+        before_action -> { authenticate(["ADMIN","DEVELOPER"]) }, only: %i[get_game get_games post_game put_game delete_game]
+        before_action -> { authenticate() }, only: %i[current]
         def login
-            proxy(:post, "#{CATEGORIES_SERVICE}/api/auth/login")
+            proxy(:post, "#{AUTH_SERVICE}/auth/login")
         end
 
         def register
-            proxy(:post, "#{CATEGORIES_SERVICE}/api/auth/register")
+            proxy(:post, "#{AUTH_SERVICE}/auth/register")
+        end
+
+        def current
+            proxy_get("#{AUTH_SERVICE}/auth/current")
         end
 
         def get_categoria
@@ -76,7 +81,9 @@ module Api
             decoded = JWT.decode(token, ENV.fetch("JWT_SECRET"), true, algorithm: "HS256")
             @user_id = decoded[0]["user_id"]
             @role = decoded[0]["role"]
-            if (allowed_roles & Array(@role)).any? == false
+            if allowed_roles.length > 0  && (allowed_roles & Array(@role)).any? == false
+                pp allowed_roles
+                pp Array(@role)
                 render json: { error: "Forbidden" }, status: :forbidden
             end
             rescue JWT::DecodeError

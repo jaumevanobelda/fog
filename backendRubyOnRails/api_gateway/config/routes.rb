@@ -1,9 +1,10 @@
 Rails.application.routes.draw do
   namespace :api do
-    # scope  :auth do
-    #   post "login", to: "gateway#login"
-    #   post "register", to: "gateway#register"
-    # end
+    scope  :auth do
+      post "login", to: "gateway#login"
+      post "register", to: "gateway#register"
+      get "current", to:"gateway#current"
+    end
 
     scope :categoria do
       post "", to: "gateway#post_categoria"

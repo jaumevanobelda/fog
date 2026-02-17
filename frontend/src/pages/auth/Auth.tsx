@@ -7,7 +7,7 @@ import { useLogin } from '../../mutations/auth/useLogin';
 export default function Auth() {
 
     const tipo = useParams().tipo;
-    const [user, setUsuari] = useState({ username: "", contrasenya: "", email: "" });
+    const [user, setUsuari] = useState({ username: "", password: "", email: "" });
     const [error_sesio, setErrorSesio] = useState({ error: false, data: "" });
     const navigate = useNavigate();
     // const { mutate, error, data } = useLogin()
@@ -46,7 +46,7 @@ export default function Auth() {
                 <div className='form-auth'>
                     <label>Usuari</label> <input type='text' value={user.username} onChange={(e) => setUsuari({ ...user, username: e.target.value })} />
                     {email_form}
-                    <label>Contrasenya</label> <input type='password' value={user.contrasenya} onChange={(e) => setUsuari({ ...user, contrasenya: e.target.value })} />
+                    <label>Contrasenya</label> <input type='password' value={user.password} onChange={(e) => setUsuari({ ...user, password: e.target.value })} />
                     {error_form}
                     <button onClick={submit}>Enviar</button>
                 </div>

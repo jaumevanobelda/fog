@@ -11,6 +11,8 @@ import { Friends } from '@/components/user/Friends';
 
 export default function Header() {
   const { userLogged, user } = useUser();
+  console.log("USER ",user);
+  
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-gray-900/95 backdrop-blur-sm border-b border-gray-800">

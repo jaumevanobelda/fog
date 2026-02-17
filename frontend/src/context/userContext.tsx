@@ -15,8 +15,10 @@ const UserContext = createContext<UserState>({
 export function UserProvider({ children }: { children: React.ReactNode }) {
     const { data } = useMe();
     let user = null;
+    console.log("Data ",data);
+    
     if(data){
-        user = data.usuari;
+        user = data.user;
     }
     
     const value = {
