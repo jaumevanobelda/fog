@@ -13,16 +13,12 @@ const UserContext = createContext<UserState>({
 
 
 export function UserProvider({ children }: { children: React.ReactNode }) {
-    const { data } = useMe();
-    let user = null;
-    console.log("Data ",data);
-    
-    if(data){
-        user = data.user;
-    }
-    
+    const { data:user } = useMe();
+    // let user = null;
+    console.log("Data ",user);
+        
     const value = {
-        userLogged: !!data,
+        userLogged: !!user,
         user
     }
 

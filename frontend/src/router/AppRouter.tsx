@@ -23,8 +23,12 @@ export default function AppRouter() {
           <Route element={<PrivateRoute />}>
             <Route path="library" element={<Library />} />
           </Route>
-          <Route path="dashboardGames" element={<DashboardGames />} />
+          <Route element={<PrivateRoute allowedRoles={["DEVELOPER","ADMIN"]}/>}>
+            <Route path="dashboardGames" element={<DashboardGames />} />
+          </Route>
+          <Route element={<PrivateRoute allowedRoles={["ADMIN"]}/>}>
           <Route path="dashboardCategories" element={<DashboardCategories />} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>)

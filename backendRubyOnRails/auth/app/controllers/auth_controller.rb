@@ -18,7 +18,7 @@ class AuthController < ApplicationController
     def current
         user = User.find(request.headers["User-Id"]&.to_i)
         if user != nil && user.errors != nil
-            render json: {user: user}
+            render json: user
         else
             pp user.errors 
             Rails.logger.error "ERROR: #{user.errors}"
@@ -32,6 +32,6 @@ class AuthController < ApplicationController
 
     def render_user
         token = JWT.encode(@user.to_token, ENV.fetch("JWT_SECRET"))
-        render json: {user: @user.as_json.merge(token: token)}
+        render json: @user.as_json.merge(token: token)
     end
 end
