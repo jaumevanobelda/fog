@@ -26,6 +26,7 @@ import Loading from "@/components/ui/loading";
 
 
 export default function Library() {
+    scrollTo({ top: 0 });
     const { data, isLoading } = useLibrary();
     const library = data?.library || [];
 
@@ -72,7 +73,7 @@ export default function Library() {
     }, []);
 
 
-    if (isLoading) return <Loading/>
+    if (isLoading) return <Loading />
 
     return (
         <>

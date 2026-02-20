@@ -33,7 +33,12 @@ function initialFilters() {
   return defaultFilters();
 }
 
+
 export default function Shop() {
+  useEffect(() => {
+    scrollTo({ top: 0 });
+  }, []);
+
   const [filters, setFilters] = useState<Filter>(initialFilters());
 
   const debouncedFilters = useDebounce(filters, 300);

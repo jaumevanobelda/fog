@@ -33,6 +33,7 @@ class GameController < ApplicationController
             return render json: { error: "Ya existe un juego con ese nombre" }, status: :conflict if params[:game][:nom].parameterize != params[:slug]
         end
         if @game.update(game_params)
+            pp params[:game]
             @game.category_ids = Category.where(slug: params[:game][:categories]).pluck(:id)
             @game.game_images.destroy_all
             params[:game][:images].each do |image|
@@ -45,7 +46,10 @@ class GameController < ApplicationController
     end
 
     def destroy
+        pp @game
         @game.update({ isActive: false })
+        pp "DESACTIVADO"
+        pp @game
         render json: { message: "Juego desactivado" }
     end
 
@@ -64,7 +68,9 @@ class GameController < ApplicationController
         return render json: { error: "No se ha encontrado el juego" } if @game == nil
 
         if request.headers["User-Role"] == "DEVELOPER"
-            render json: { error: "No tienes permisos" } if @game.developer != request.headers["User-Id"]&.to_i
+            pp @game.developer
+            pp request.headers["User-Id"]&.to_i
+            render json: { error: "No tienes permisos" } if @game.developer&.to_i != request.headers["User-Id"]&.to_i
         end
     end
 

@@ -73,7 +73,7 @@ module Api
 
         #   UTILS
 
-        def authenticate(*allowed_roles)
+        def authenticate(allowed_roles = [])
             token = request.headers["Authorization"]&.split(" ")&.last
 
             return render json: { error: "No token" }, status: :unauthorized unless token
@@ -81,7 +81,7 @@ module Api
             decoded = JWT.decode(token, ENV.fetch("JWT_SECRET"), true, algorithm: "HS256")
             @user_id = decoded[0]["user_id"]
             @role = decoded[0]["role"]
-            if allowed_roles.length > 0  && (allowed_roles & Array(@role)).any? == false
+            if allowed_roles.length > 0  && (allowed_roles && Array(@role)).any? == false
                 pp allowed_roles
                 pp Array(@role)
                 render json: { error: "Forbidden" }, status: :forbidden

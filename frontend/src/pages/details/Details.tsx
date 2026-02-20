@@ -7,15 +7,18 @@ import { toast } from 'sonner';
 import Reviews from '@/components/reviews/Reviews';
 import { useGetCart } from '@/queries/cart/useCart';
 import Loading from '@/components/ui/loading';
+import { useEffect } from 'react';
 
 export default function Details() {
-
+  useEffect(() => {
+    scrollTo({ top: 0 });
+  }, []);
   const { isLoading, isError, error, data: game, } = useGame(useParams().slug!);
   const cart = useGetCart().data?.cart;
   const { mutateAsync } = useAddToCart();
   const navigate = useNavigate();
 
-  if (isLoading) return <Loading/>
+  if (isLoading) return <Loading />
 
   if (isError) {
     console.log("Error ", error);
@@ -66,7 +69,7 @@ export default function Details() {
             <h2 className='text-3xl font-bold'>{game.precio}€</h2>
             {game.owned
               ? <div className='bg-blue-600 px-3 py-1 rounded'>Juego Comprado</div>
-              : ( cart != null && cart.includes(game.id)) 
+              : (cart != null && cart.includes(game.id))
                 ? <div className='bg-blue-600 px-3 py-1 rounded'>Juego añadido al carrito</div>
                 : <Button variant="outline" onClick={addToCart}>Añadir al carrito</Button>
             }

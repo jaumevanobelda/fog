@@ -26,9 +26,11 @@ func main() {
 	database.DB.AutoMigrate(&models.Category{})
 	r := gin.Default()
 	gameRepo := repository.NewGameRepository(database.DB)
-	gameHandler := handler.NewGameHandler(gameRepo)
+	userRepo := repository.NewUserRepository(database.DB)
+	gameHandler := handler.NewGameHandler(gameRepo, userRepo)
 	categoryRepo := repository.NewCategoryRepository(database.DB)
 	categoryHandler := handler.NewCategoryHandler(categoryRepo)
+
 	routes.Setup(gameHandler, categoryHandler, r)
 	r.Run(":" + os.Getenv("PORT"))
 	fmt.Println("Games arrancado ")

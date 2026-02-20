@@ -23,7 +23,7 @@ func (g *Game) ToMap() map[string]interface{} {
 	for i, cat := range g.Categories {
 		categories[i] = cat.Nom
 	}
-	
+
 	images := make([]string, len(g.GameImages))
 	for i, img := range g.GameImages {
 		images[i] = img.Image
@@ -34,7 +34,7 @@ func (g *Game) ToMap() map[string]interface{} {
 		"nom":         g.Nom,
 		"descripcion": g.Descripcion,
 		"precio":      g.Precio,
-		"developer":   g.Developer,
+		// "developer":   g.Developer,
 		// "isActive":    g.IsActive,
 		"categories": categories,
 		"images":     images,

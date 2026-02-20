@@ -16,8 +16,10 @@ class Game < ApplicationRecord
     end
 
     def as_json
-        super({ only: %i[slug nom descripcion precio developer isActive ] }).merge(
-        categories: categories.pluck(:slug), images: game_images.pluck(:image))
+        super({ only: %i[slug nom descripcion precio isActive ] }).merge(
+        categories: categories.pluck(:slug), images: game_images.pluck(:image),
+        developer: User.find(self.developer).username
+        )
     end
 
     scope :filter_by_precio, ->(minPrecio, maxPrecio) {
@@ -27,7 +29,7 @@ class Game < ApplicationRecord
 
     scope :filter_by_search, ->(search) {
         return all if search.nil? || search == ""
-        where("LOWER(NOM) LIKE ?", "%#{search.to_s.downcase}%")
+        where("LOWER(games.nom) LIKE ?", "%#{search.to_s.downcase}%")
     }
 
     scope :filter_by_categories, ->(categories) {
