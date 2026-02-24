@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_02_13_161439) do
+ActiveRecord::Schema[8.1].define(version: 2026_02_20_154913) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -62,15 +62,36 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_161439) do
     t.index ["slug"], name: "index_games_on_slug", unique: true
   end
 
-  create_table "users", force: :cascade do |t|
+  create_table "refresh_sessions", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "email"
-    t.string "foto"
-    t.string "password_digest"
-    t.string "role", default: "CLIENT", null: false
+    t.string "current_token_hash", null: false
+    t.string "device_id", null: false
+    t.string "family_id", null: false
+    t.datetime "last_used_at"
+    t.boolean "revoked", default: false, null: false
+    t.integer "session_version", null: false
     t.datetime "updated_at", null: false
-    t.string "username"
+    t.bigint "user_id", null: false
+    t.index ["family_id"], name: "index_refresh_sessions_on_family_id", unique: true
+    t.index ["user_id", "device_id"], name: "index_refresh_sessions_on_user_id_and_device_id"
+    t.index ["user_id"], name: "index_refresh_sessions_on_user_id"
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.datetime "created_at"
+    t.timestamptz "deleted_at"
+    t.text "email"
+    t.text "foto"
+    t.text "password"
+    t.string "password_digest"
+    t.text "role"
+    t.integer "session_version", default: 0, null: false
+    t.datetime "updated_at"
+    t.text "username"
+    t.index ["deleted_at"], name: "idx_users_deleted_at"
+    t.index ["email"], name: "idx_users_email", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["username"], name: "idx_users_username", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
@@ -79,4 +100,5 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_13_161439) do
   add_foreign_key "game_categories", "games"
   add_foreign_key "game_categories", "games", name: "fk_game_categories_game"
   add_foreign_key "game_images", "games"
+  add_foreign_key "refresh_sessions", "users"
 end

@@ -3,6 +3,10 @@ Rails.application.routes.draw do
     post 'register', to: 'auth#register'
     post 'login', to: 'auth#login'
     get 'current', to: 'auth#current'
+    post 'refresh', to: 'auth#refresh'
+    post 'logout', to: 'auth#logout'
+    post 'logoutAll', to: 'auth#logoutAll'
+
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

@@ -1,6 +1,9 @@
 class User < ApplicationRecord
     before_save :generate_foto
     has_secure_password
+
+    has_many :refresh_sessions, dependent: :destroy
+
     validates :username, :email, :password, presence: true
     validates :email, :username, uniqueness: true, on: :create
 
@@ -9,12 +12,16 @@ class User < ApplicationRecord
             self.foto = "https://dummyimage.com/250x250&text=#{self.username.parameterize}"
         end
     end
-    
+
     scope :by_username_or_email, ->(value) { where("username = ? OR email = ?", value, value) }
 
-    
-    def to_token
-        return {user_id: id,role: role,exp: 24.hours.from_now.to_i}
+
+    def to_access_token
+        { user_id: id, role: role, exp: 15.minutes.from_now.to_i }
+    end
+
+    def to_refresh_token(family_id)
+        { user_id: id, family_id: family_id, exp: 15.days.from_now.to_i }
     end
 
     def as_json

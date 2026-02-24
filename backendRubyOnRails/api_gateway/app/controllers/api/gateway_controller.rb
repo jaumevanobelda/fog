@@ -4,8 +4,8 @@ module Api
         GAMES_SERVICE = "http://localhost:3002"
         AUTH_SERVICE = "http://localhost:3003"
         before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game ]
-        before_action -> { authenticate(["ADMIN","DEVELOPER"]) }, only: %i[get_game get_games post_game put_game delete_game]
-        before_action -> { authenticate() }, only: %i[current]
+        before_action -> { authenticate([ "ADMIN", "DEVELOPER" ]) }, only: %i[get_game get_games post_game put_game delete_game]
+        before_action -> { authenticate() }, only: %i[current logout logoutAll]
         def login
             proxy(:post, "#{AUTH_SERVICE}/auth/login")
         end
@@ -16,6 +16,22 @@ module Api
 
         def current
             proxy_get("#{AUTH_SERVICE}/auth/current")
+        end
+
+        def refresh
+            proxy(:post, "#{AUTH_SERVICE}/auth/refresh")
+        end
+
+        def logout
+            pp "Logout"
+            cookies.delete(:refresh_token)
+            proxy(:post, "#{AUTH_SERVICE}/auth/logout")
+        end
+
+        def logoutAll
+            pp "Logout"
+            cookies.delete(:refresh_token)
+            proxy(:post, "#{AUTH_SERVICE}/auth/logoutAll")
         end
 
         def get_categoria
@@ -70,9 +86,6 @@ module Api
             proxy(:put, "#{GAMES_SERVICE}/game/activate/#{params[:slug]}")
         end
 
-
-        #   UTILS
-
         def authenticate(allowed_roles = [])
             token = request.headers["Authorization"]&.split(" ")&.last
 
@@ -86,21 +99,38 @@ module Api
                 pp Array(@role)
                 render json: { error: "Forbidden" }, status: :forbidden
             end
-            rescue JWT::DecodeError
-                render json: { error: "Unauthorized" }, status: :unauthorized
-            end
 
+        rescue JWT::DecodeError => error
+            pp error
+            render json: { error: "Unauthorized" }, status: :unauthorized
+        end
 
         def proxy(method, url)
             body = request.raw_post.present? ? JSON.parse(request.raw_post) : {}
-            # body.merge!(user_id: @user_id) if @user_id
-            # body.merge!(role: @role) if @role
             headers = {}
             headers["Content-Type"] = "application/json"
             headers["User-Id"] = @user_id.to_s if @user_id
             headers["User-Role"] = @role if @role
+            headers["X-Refresh-Token"] = cookies[:refresh_token] if cookies[:refresh_token]
             response = Faraday.run_request(method, url, body.to_json, headers)
-            render json: JSON.parse(response.body), status: response.status
+
+            parsed = JSON.parse(response.body)
+            if response.status == 200 && parsed["refresh_token"] != nil
+                set_refresh_cookie(parsed["refresh_token"])
+                parsed.delete("refresh_token")
+                pp cookies[:refresh_token]
+            end
+            render json: parsed, status: response.status
+        end
+
+        def set_refresh_cookie(token)
+            cookies[:refresh_token] = {
+                value: token,
+                httponly: true,
+                secure: Rails.env.production?,
+                same_site: :lax,
+                expires: 15.days.from_now
+            }
         end
 
         def proxy_get(url)
@@ -117,12 +147,3 @@ module Api
         end
     end
 end
-#   def proxy_post(url)
-#     body = JSON.parse(request.raw_post).merge(@user_id?)
-
-#     response = Faraday.post(url) do |req|
-#         req.headers["Content-Type"] = "application/json"
-#         req.body = body.to_json
-#     end
-#     render json: response.body, status: response.status
-#   end
