@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query'
 import { login } from '../../services/authService'
 import { queryClient } from '../../utils/queryClient';
+import { broadcastAuth } from '@/services/api';
 
 
 export function useLogin() {
@@ -12,6 +13,7 @@ export function useLogin() {
             console.log("DATA USER ",user);
             queryClient.invalidateQueries({ queryKey: ['me'] });
             queryClient.setQueryData(['me'], user);
+            broadcastAuth("LOGIN");
         }
     })
 }

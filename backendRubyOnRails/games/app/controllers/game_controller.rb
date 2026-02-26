@@ -51,7 +51,7 @@ class GameController < ApplicationController
     end
 
     def activate
-        return render json: { error: "No pudes activar juegos" } if request.headers["User-Role"] == "DEVELOPER"
+        # return render json: { error: "No pudes activar juegos" } if request.headers["User-Role"] == "DEVELOPER"
         @game.update({ isActive: true })
         render json: { message: "Juego activado" }
     end

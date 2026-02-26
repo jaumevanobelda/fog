@@ -1,28 +1,47 @@
-import { apiAuth } from './api'
+import { apiAuth, broadcastAuth } from './api'
 import { queryClient } from '../utils/queryClient'
 
+function getDeviceId(): string {
+    let deviceId = localStorage.getItem('device_id');
+    if (!deviceId) {
+        deviceId = crypto.randomUUID();
+        localStorage.setItem('device_id', deviceId);
+    }
+    return deviceId;
+}
 
 export async function login(req: any) {
-    const res = await apiAuth.post(`auth/${req.tipo}`, req.user);
+    const res = await apiAuth.post(`auth/${req.tipo}`, { ...req.user, device_id: getDeviceId() });
     console.log("REs ", res);
+    broadcastAuth("LOGIN");
     return await res.data;
 }
 
 export async function getCurrent() {
+    // console.log("TOKEN ", localStorage.getItem("token"));
+
     if (localStorage.getItem("token") != null) {
         const res = await apiAuth.get("auth/current");
         return res.data;
     } else {
         return null;
     }
+}
+export async function refresh() {
+    const res = await apiAuth.post("auth/refresh");
+    return res.data;
 
 }
 
-export function logout() {
-    console.log("Logout");
-    localStorage.removeItem('token');
+export async function logout() {
+    console.log("Logout"); 
+    const res = await apiAuth.post("auth/logout");
     queryClient.setQueryData(['me'], null);
     queryClient.removeQueries({ queryKey: ['me'] });
+    localStorage.removeItem('token');
+    // broadcastAuth("LOGOUT");
+    broadcastAuth("LOGOUT");
+    return res.data;
 }
 
 
@@ -39,17 +58,17 @@ export async function getSendedFriendRequests() {
     const res = await apiAuth.get("auth/friends/request/sended");
     return res.data;
 }
-export async function sendFriendRequest(username:string) {
+export async function sendFriendRequest(username: string) {
     const res = await apiAuth.post(`auth/friends/request/send/${username}`);
     return res.data;
 }
 
-export async function acceptFriendRequest(username:string) {
+export async function acceptFriendRequest(username: string) {
     const res = await apiAuth.post(`auth/friends/request/accept/${username}`);
     return res.data;
 }
 
-export async function rejectFriendRequest(username:string) {
+export async function rejectFriendRequest(username: string) {
     const res = await apiAuth.post(`auth/friends/request/reject/${username}`);
     return res.data;
 }
