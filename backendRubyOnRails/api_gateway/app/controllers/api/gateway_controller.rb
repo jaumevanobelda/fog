@@ -5,6 +5,7 @@ module Api
         AUTH_SERVICE = "http://localhost:3003"
         before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game ]
         before_action -> { authenticate([ "ADMIN", "DEVELOPER" ]) }, only: %i[get_game get_games post_game put_game delete_game]
+        before_action -> { cookies.delete(:refresh_token) }, only: %i[ logout]
         before_action -> { authenticate() }, only: %i[current logout logoutAll]
         def login
             proxy(:post, "#{AUTH_SERVICE}/auth/login")
@@ -24,12 +25,10 @@ module Api
 
         def logout
             pp "Logout"
-            cookies.delete(:refresh_token)
             proxy(:post, "#{AUTH_SERVICE}/auth/logout")
         end
 
         def logoutAll
-            pp "Logout"
             cookies.delete(:refresh_token)
             proxy(:post, "#{AUTH_SERVICE}/auth/logoutAll")
         end
@@ -97,7 +96,7 @@ module Api
             if allowed_roles.length > 0  && (allowed_roles && Array(@role)).any? == false
                 pp allowed_roles
                 pp Array(@role)
-                render json: { error: "Forbidden" }, status: :forbidden
+                return render json: { error: "Forbidden" }, status: :forbidden
             end
 
         rescue JWT::DecodeError => error
@@ -118,7 +117,6 @@ module Api
             if response.status == 200 && parsed["refresh_token"] != nil
                 set_refresh_cookie(parsed["refresh_token"])
                 parsed.delete("refresh_token")
-                pp cookies[:refresh_token]
             end
             render json: parsed, status: response.status
         end

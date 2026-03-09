@@ -34,14 +34,22 @@ export async function refresh() {
 }
 
 export async function logout() {
-    console.log("Logout"); 
-    const res = await apiAuth.post("auth/logout");
-    queryClient.setQueryData(['me'], null);
-    queryClient.removeQueries({ queryKey: ['me'] });
-    localStorage.removeItem('token');
-    // broadcastAuth("LOGOUT");
-    broadcastAuth("LOGOUT");
-    return res.data;
+    console.log("Logout");
+    try {
+        const res = await apiAuth.post("auth/logout",{device_id:getDeviceId()});
+        queryClient.setQueryData(['me'], null);
+        queryClient.removeQueries({ queryKey: ['me'] });
+        localStorage.removeItem('token');
+
+        return res.data;
+    } catch (error) {
+        console.log("Error logout", error);
+        queryClient.setQueryData(['me'], null);
+        queryClient.removeQueries({ queryKey: ['me'] });
+        localStorage.removeItem('token');
+        broadcastAuth("LOGOUT");
+    }
+
 }
 
 

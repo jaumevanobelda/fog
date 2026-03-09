@@ -59,20 +59,24 @@ const addAuthInterceptor = async (apiInstance: any) => {
             const res = error.response;
             const originalRequest = error.config;
             // console.log(`Error ${res.status}`, error);
+
+            if (res.request.responseURL == `${API_AUTH_URL}/auth/refresh`) {
+                console.log("EXPIRED");
+                logout();
+                broadcastAuth("END_REFRESHING", { refreshing: false });
+                return Promise.reject(error);
+            }
+
             if (res.status === 401 && !refreshing && !originalRequest._retry) {
                 // console.log("BEGIN REFRESHING ", new Date().toISOString().slice(14, 23));
 
                 refreshing = true;
                 broadcastAuth("BEGIN_REFRESHING", { refreshing: true });
-                if (res.request.responseURL == `${API_AUTH_URL}/auth/refresh`) {
-                    console.log("EXPIRED");
-                    logout();
-                    return Promise.reject(error);
-                }
+
 
                 originalRequest._retry = true;
                 let data = await refresh();
-                console.log("Refresh  ", data);
+                // console.log("Refresh  ", data);
                 localStorage.setItem('token', data.token);
                 if (data.token != null) {
                     refreshing = false;
@@ -82,6 +86,8 @@ const addAuthInterceptor = async (apiInstance: any) => {
 
                 originalRequest.headers.Authorization = `Bearer ${data.token}`;
                 return apiInstance(originalRequest);
+
+
             }
             return Promise.reject(error)
         }
