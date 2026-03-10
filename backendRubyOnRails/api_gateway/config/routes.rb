@@ -27,6 +27,12 @@ Rails.application.routes.draw do
       delete ":slug", to: "gateway#delete_game"
       put "activate/:slug", to: "gateway#activate_game"
     end
+    scope :cart do
+      put "", to: "gateway#add_to_cart"
+      get "", to: "gateway#get_cart" 
+      delete ":slug", to: "gateway#remove_from_cart"
+      delete "", to: "gateway#clear_cart"
+    end
     
     
   end

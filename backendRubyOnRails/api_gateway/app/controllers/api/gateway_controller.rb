@@ -3,10 +3,11 @@ module Api
         CATEGORIES_SERVICE   = "http://localhost:3001"
         GAMES_SERVICE = "http://localhost:3002"
         AUTH_SERVICE = "http://localhost:3003"
+        CART_SERVICE = "http://localhost:3004"
         before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game ]
         before_action -> { authenticate([ "ADMIN", "DEVELOPER" ]) }, only: %i[get_game get_games post_game put_game delete_game]
         before_action -> { cookies.delete(:refresh_token) }, only: %i[ logout]
-        before_action -> { authenticate() }, only: %i[current logout logoutAll]
+        before_action -> { authenticate() }, only: %i[current logout logoutAll clear_cart remove_from_cart get_cart add_to_cart]
         def login
             proxy(:post, "#{AUTH_SERVICE}/auth/login")
         end
@@ -85,9 +86,24 @@ module Api
             proxy(:put, "#{GAMES_SERVICE}/game/activate/#{params[:slug]}")
         end
 
+        def add_to_cart
+            proxy(:put, "#{CART_SERVICE}/cart")
+        end
+
+        def get_cart
+            proxy_get("#{CART_SERVICE}/cart")
+        end
+
+        def remove_from_cart
+            proxy(:delete, "#{CART_SERVICE}/cart/#{params[:slug]}")
+        end
+
+        def clear_cart
+            proxy(:delete, "#{CART_SERVICE}/cart")
+        end
+
         def authenticate(allowed_roles = [])
             token = request.headers["Authorization"]&.split(" ")&.last
-
             return render json: { error: "No token" }, status: :unauthorized unless token
 
             decoded = JWT.decode(token, ENV.fetch("JWT_SECRET"), true, algorithm: "HS256")
@@ -96,7 +112,7 @@ module Api
             if allowed_roles.length > 0  && (allowed_roles && Array(@role)).any? == false
                 pp allowed_roles
                 pp Array(@role)
-                return render json: { error: "Forbidden" }, status: :forbidden
+                render json: { error: "Forbidden" }, status: :forbidden
             end
 
         rescue JWT::DecodeError => error
@@ -114,7 +130,7 @@ module Api
             response = Faraday.run_request(method, url, body.to_json, headers)
 
             parsed = JSON.parse(response.body)
-            if response.status == 200 && parsed["refresh_token"] != nil
+            if response.status == 200 && parsed.is_a?(Hash) &&  parsed["refresh_token"] != nil
                 set_refresh_cookie(parsed["refresh_token"])
                 parsed.delete("refresh_token")
             end

@@ -43,8 +43,8 @@ export default function Cart() {
         }
         return (
             <>
-                {data.cart?.map((id: number) => {
-                    return <GameCartCard id={id} key={id}></GameCartCard>
+                {data.cart?.map((slug: number) => {
+                    return <GameCartCard slug={slug} key={slug}></GameCartCard>
                 })}
                 <Button onClick={comprar} disabled={isPending}>
                     {isPending ? 'Procesando...' : 'Comprar'}

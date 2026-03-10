@@ -90,7 +90,7 @@ export default function Details() {
 
   async function addToCart() {
     try {
-      let data = await mutateAsync(game!.id!);
+      let data = await mutateAsync(game!.slug!);
       console.log("data ", await data);
       toast.success("Juego añadidido al carrito");
 

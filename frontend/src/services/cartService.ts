@@ -1,21 +1,21 @@
-import { apiClientServer } from "./api";
+import { apiAuth } from "./api";
 
-export async function addToCart(id:number) {
-    const res = await apiClientServer.post(`cart`,{gameId:id});
+export async function addToCart(slug:string) {
+    const res = await apiAuth.put(`cart`,{slug});
     return await res.data;
 }   
 
 export async function GetCart() {
-    const res = await apiClientServer.get('cart');
+    const res = await apiAuth.get('cart');
     return await res.data;
 }
 
-export async function removeFromCart(id:number) {
-    const res = await apiClientServer.delete(`cart/${id}`);
+export async function removeFromCart(slug:string) {
+    const res = await apiAuth.delete(`cart/${slug}`);
     return await res.data;
 }
 
 export async function clearCart() {
-    const res = await apiClientServer.delete('cart');
+    const res = await apiAuth.delete('cart');
     return await res.data;
 }   

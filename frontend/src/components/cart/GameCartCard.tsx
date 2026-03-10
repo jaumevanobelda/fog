@@ -8,9 +8,9 @@ import { Trash2 } from 'lucide-react'
 import Loading from '../ui/loading'
 
 
-export default function GameCartCard({ id }: { id: any }) {
+export default function GameCartCard({  slug }: { slug: any }) {
   // console.log("GAME ",game);
-  let { data: game, isLoading } = useGame(id);
+  let { data: game, isLoading } = useGame(slug);
   const { mutateAsync: removeFromCart } = useRemoveFromCart();
 
   if (isLoading) return <Loading/>
@@ -21,7 +21,7 @@ export default function GameCartCard({ id }: { id: any }) {
 
   const Remove = async () => {
     try {
-      await removeFromCart(game.id || -1);
+      await removeFromCart(game.slug);
     } catch (error: any) {
       console.error("Error removeFromCart ", error);
       toast.error("Error inseperado");

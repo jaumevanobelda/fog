@@ -8,6 +8,7 @@ import type { Categoria } from '@/types/categoria'
 export function useGame(slug: string) {
   return useQuery<Game>({
     queryKey: ['game', slug],
+    refetchOnMount:false,
     queryFn: () => getGame(slug),
 
   })

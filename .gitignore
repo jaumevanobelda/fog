@@ -58,9 +58,9 @@ config/*.key
 *.gem
 *.rbc
 .bundle
-backendRubyRails/*/vendor/bundle
-backendRubyRails/*/vendor/cache
-backendRubyRails/*/vendor/ruby
+backendRubyOnRails/*/vendor/bundle
+backendRubyOnRails/*/vendor/cache
+backendRubyOnRails/*/vendor/ruby
 .ruby-version
 .ruby-gemset
 
@@ -77,16 +77,15 @@ storage/*
 ############################
 # Database
 ############################
-db/*.sqlite3
-db/*.sqlite3-journal
-db/*.sqlite3-*
-
+backendRubyOnRails/*/db/*.sqlite3
+backendRubyOnRails/*/db/*.sqlite3-journal
+backendRubyOnRails/*/db/*.sqlite3-*
 ############################
 # Credentials / Secrets
 ############################
-config/master.key
-config/credentials/*.key
-config/credentials/*.yml.enc
+backendRubyOnRails/*/config/master.key
+backendRubyOnRails/*/config/credentials/*.key
+backendRubyOnRails/*/config/credentials/*.yml.enc
 
 ############################
 # Environment variables

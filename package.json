@@ -1,7 +1,7 @@
 {
     "scripts": {
     "frontend": "cd frontend && npm run dev",
-    "backendRubyOnRails":"cd backendRubyOnRails && concurrently --names \"Api_gateway,Categories,Games,Auth\" --prefix-colors \"red,yellow,blue,orange\" \"cd api_gateway && rails server\" \"cd categories && rails server\" \"cd games && rails server\" \"cd auth && rails server\" ",
+    "backendRubyOnRails":"cd backendRubyOnRails && concurrently --names \"Api_gateway,Categories,Games,Auth,Cart\" --prefix-colors \"red,yellow,blue,orange\" \"cd api_gateway && rails server\" \"cd categories && rails server\" \"cd games && rails server\" \"cd auth && rails server\" \"cd cart && rails server\" ",
     "backendGo":"cd backendGo && concurrently --names \"Api_gateway,Games\" --prefix-colors \"red,blue\" \"cd api_gateway && air \" \"cd games && air\" ",
     "backend":"npx concurrently --names \"Rails,Go\" --prefix-colors \"red,yellow\" \"npm run backendRubyOnRails\" \"npm run backendGo\" "
   }
