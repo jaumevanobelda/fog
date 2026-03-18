@@ -6,7 +6,14 @@ class CartController < ApplicationController
     end
 
     def addToCart
-        created_game = @cart.cart_games.create(game_id: Game.find_by(slug: params[:slug])[:id])
+        user = User.find(request.headers["User-Id"]&.to_i)
+        game_id = Game.find_by(slug: params[:slug])[:id]
+        repeated_game = user.libraries.find_by(game_id: game_id)
+        pp "repeated_game"
+        pp repeated_game
+        return render json: { error: "El juego #{Game.find(repeated_game.game_id).nom} ya esta en tu biblioteca" }, status: 400 if repeated_game != nil
+
+        created_game = @cart.cart_games.create(game_id: game_id)
         if created_game.persisted?
             render json: { cart: @cart.cart_games }
         else

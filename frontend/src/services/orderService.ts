@@ -9,3 +9,7 @@ export async function ConfirmOrder(sessionId: string) {
     const res = await apiAuth.post(`order/confirm`, { sessionId });
     return res.data;
 }
+export async function CancelOrder(sessionId: string) {
+    const res = await apiAuth.post(`order/cancel`, { sessionId });
+    return res.data;
+}

@@ -33,6 +33,11 @@ Rails.application.routes.draw do
       delete ":slug", to: "gateway#remove_from_cart"
       delete "", to: "gateway#clear_cart"
     end
+    scope :order do
+      post "checkout", to: "gateway#create_checkout_order"
+      post "confirm", to: "gateway#confirm_order"
+      post "cancel", to: "gateway#cancel_order"
+    end
     
     
   end

@@ -14,10 +14,10 @@ export default function CheckoutSuccess() {
     const { mutateAsync: clearCart } = useClearCart();
     const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
     const [order, setOrder] = useState<any>(null);
-    console.log("searchParams ",searchParams);
+    console.log("searchParams ", searchParams);
 
-    
-    
+
+
     useEffect(() => {
         if (!sessionId) {
             navigate('/');
@@ -27,8 +27,8 @@ export default function CheckoutSuccess() {
         const confirm = async () => {
             try {
                 const res = await confirmOrder(sessionId);
-                console.log("Res ",res);
-                
+                console.log("Res ", res);
+
                 setOrder(res.order);
                 setStatus('success');
                 await clearCart();

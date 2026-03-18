@@ -4,10 +4,11 @@ module Api
         GAMES_SERVICE = "http://localhost:3002"
         AUTH_SERVICE = "http://localhost:3003"
         CART_SERVICE = "http://localhost:3004"
+        ORDERS_SERVICE = "http://localhost:3005"
         before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game ]
         before_action -> { authenticate([ "ADMIN", "DEVELOPER" ]) }, only: %i[get_game get_games post_game put_game delete_game]
         before_action -> { cookies.delete(:refresh_token) }, only: %i[ logout]
-        before_action -> { authenticate() }, only: %i[current logout logoutAll clear_cart remove_from_cart get_cart add_to_cart]
+        before_action -> { authenticate() }, only: %i[current logout logoutAll clear_cart remove_from_cart get_cart add_to_cart create_checkout_order confirm_order cancel_order]
         def login
             proxy(:post, "#{AUTH_SERVICE}/auth/login")
         end
@@ -100,6 +101,17 @@ module Api
 
         def clear_cart
             proxy(:delete, "#{CART_SERVICE}/cart")
+        end
+
+        def create_checkout_order
+            proxy(:post, "#{ORDERS_SERVICE}/order/checkout")
+        end
+
+        def confirm_order
+            proxy(:post, "#{ORDERS_SERVICE}/order/confirm")
+        end
+        def cancel_order
+            proxy(:post, "#{ORDERS_SERVICE}/order/cancel")
         end
 
         def authenticate(allowed_roles = [])
