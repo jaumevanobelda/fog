@@ -1,7 +1,7 @@
 import { apiClientServer } from "./api";
 
 export async function getGamesLibrary() {
-    const res = await apiClientServer.get("library");
+    const res = await apiClientServer.get("library/");
     return await res.data;
 }   
 
@@ -14,23 +14,23 @@ export async function removeCollection(collectionId:string) {
     return await res.data;
 }
 
-export async function addGameToCollection(collectionId: string, gameId: number) {
-    const res = await apiClientServer.put(`library/collections/${collectionId}`, { gameId });
+export async function addGameToCollection(collectionId: string, slug: string) {
+    const res = await apiClientServer.put(`library/collections/${collectionId}`, { slug });
     return await res.data;
 }
 
-export async function removeGameFromCollection(collectionId: string, gameId: number) {
-    const res = await apiClientServer.delete(`library/collections/${collectionId}/games/${gameId}`);
+export async function removeGameFromCollection(collectionId: string, slug: string) {
+    const res = await apiClientServer.delete(`library/collections/${collectionId}/games/${slug}`);
     return await res.data;
 }
 
-export async function moveGameToCollection(fromCollectionId: string, toCollectionId: string, gameId: number) {
+export async function moveGameToCollection(fromCollectionId: string, toCollectionId: string, slug: string) {
     if (fromCollectionId === 'all') {
-        return await addGameToCollection(toCollectionId, gameId);
+        return await addGameToCollection(toCollectionId, slug);
     }
     if (toCollectionId === 'all') {
-        return await removeGameFromCollection(fromCollectionId, gameId);
+        return await removeGameFromCollection(fromCollectionId, slug);
     }
-    await removeGameFromCollection(fromCollectionId, gameId);
-    return await addGameToCollection(toCollectionId, gameId);
+    await removeGameFromCollection(fromCollectionId, slug);
+    return await addGameToCollection(toCollectionId, slug);
 }   

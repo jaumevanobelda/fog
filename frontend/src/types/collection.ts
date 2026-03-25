@@ -1,5 +1,5 @@
 export interface Collection {
-    id: string;
+    slug: string;
     collection: string;
-    games: {id: number,nom: string}[];
+    games: {slug: string,nom: string}[];
 }

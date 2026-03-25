@@ -11,11 +11,11 @@ import { useRemoveCollection } from '@/mutations/library/useLibrary';
 
 
 function DraggableGame({ game, collectionId, currentGame, setCurrentGame }
-    : { game: { id: number, nom: string }; collectionId: string; currentGame: { id: number, collection: string } | null; setCurrentGame: Function; }) {
+    : { game: { slug: string, nom: string }; collectionId: string; currentGame: { slug: string, collection: string } | null; setCurrentGame: Function; }) {
     const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
-        id: `game-${game.id}-from-${collectionId}`,
+        id: `game-${game.slug}-from-${collectionId}`,
         data: {
-            gameId: game.id,
+            gameSlug: game.slug,
             gameName: game.nom,
             fromCollectionId: collectionId,
         },
@@ -27,11 +27,11 @@ function DraggableGame({ game, collectionId, currentGame, setCurrentGame }
     };
 
     return (
-        <div onClick={() => setCurrentGame({ id: game.id, collection: collectionId })} {...listeners} {...attributes}
+        <div onClick={() => setCurrentGame({ slug: game.slug, collection: collectionId })} {...listeners} {...attributes}
             ref={setNodeRef}
             style={style}
             className={`group cursor-pointer px-4 py-3 rounded-lg mb-2 transition-all duration-200 flex items-center gap-2
-                ${currentGame?.id === game.id && currentGame?.collection === collectionId
+                ${currentGame?.slug === game.slug && currentGame?.collection === collectionId
                     ? 'bg-blue-600/20 border-l-4 border-blue-500'
                     : 'bg-gray-800/50 hover:bg-gray-700/50 border-l-4 border-transparent'
                 }
@@ -40,7 +40,7 @@ function DraggableGame({ game, collectionId, currentGame, setCurrentGame }
                 <GripVertical size={16} />
             </div>
             <div className="flex-1">
-                <h3 className={`font-medium truncate text-sm ${currentGame?.id === game.id && currentGame?.collection === collectionId ? 'text-blue-300' : 'text-white group-hover:text-blue-200'}`}>
+                <h3 className={`font-medium truncate text-sm ${currentGame?.slug === game.slug && currentGame?.collection === collectionId ? 'text-blue-300' : 'text-white group-hover:text-blue-200'}`}>
                     {game.nom}
                 </h3>
             </div>
@@ -48,11 +48,11 @@ function DraggableGame({ game, collectionId, currentGame, setCurrentGame }
     );
 }
 
-export default function CollectionCard({ collection, currentGame, setCurrentGame }: { collection: Collection, currentGame: { id: number, collection: string } | null, setCurrentGame: Function; }) {
+export default function CollectionCard({ collection, currentGame, setCurrentGame }: { collection: Collection, currentGame: { slug: string, collection: string } | null, setCurrentGame: Function; }) {
     const { isOver, setNodeRef } = useDroppable({
-        id: `collection-${collection.id}`,
+        id: `collection-${collection.slug}`,
         data: {
-            collectionId: collection.id,
+            collectionId: collection.slug,
             collectionName: collection.collection,
         },
     });
@@ -81,7 +81,7 @@ export default function CollectionCard({ collection, currentGame, setCurrentGame
                         </span>
                         {collection.collection === "Todos los juegos" ? null : (
                             <div
-                                onClick={(e) => { e.stopPropagation(); removeCollection(collection.id); }}
+                                onClick={(e) => { e.stopPropagation(); removeCollection(collection.slug); }}
                                 className=" hover:text-red-400"
                                 aria-label={`Eliminar colección ${collection.collection}`}
                             >
@@ -117,8 +117,8 @@ export default function CollectionCard({ collection, currentGame, setCurrentGame
                             </EmptyContent>
                         </Empty>
 
-                        : collection.games.map((game: { id: number, nom: string }) => (
-                            <DraggableGame key={game.id} game={game} collectionId={collection.id} currentGame={currentGame} setCurrentGame={setCurrentGame} />
+                        : collection.games.map((game: { slug: string, nom: string }) => (
+                            <DraggableGame key={game.slug} game={game} collectionId={collection.slug} currentGame={currentGame} setCurrentGame={setCurrentGame} />
                         ))}
                 </div>
             </CollapsibleContent>

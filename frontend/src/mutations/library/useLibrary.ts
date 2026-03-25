@@ -27,12 +27,12 @@ export function useRemoveCollection() {
 
 export function useMoveGameToCollection() {
     return useMutation({
-        mutationFn: async ({ fromCollectionId, toCollectionId, gameId }: {
+        mutationFn: async ({ fromCollectionId, toCollectionId, slug }: {
             fromCollectionId: string;
             toCollectionId: string;
-            gameId: number
+            slug: string
         }) => {
-            return await moveGameToCollection(fromCollectionId, toCollectionId, gameId);
+            return await moveGameToCollection(fromCollectionId, toCollectionId, slug);
         },
         onSuccess() {
             queryClient.invalidateQueries({ queryKey: ['getGamesLibrary'] });

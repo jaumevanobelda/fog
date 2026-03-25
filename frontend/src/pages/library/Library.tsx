@@ -30,7 +30,7 @@ export default function Library() {
     const { data, isLoading } = useLibrary();
     const library = data?.library || [];
 
-    const [currentGame, setCurrentGame] = useState<{ id: number, collection: string } | null>(null);
+    const [currentGame, setCurrentGame] = useState<{ slug: string, collection: string } | null>(null);
     const [nuevacollection, setNuevacollection] = useState<string>('');
     const [activeGame, setActiveGame] = useState<string | null>(null);
 
@@ -50,13 +50,14 @@ export default function Library() {
         setActiveGame(null);
 
         if (!over || !active.data.current) return;
-
+        console.log("current ", active.data.current);
+        
         const fromCollectionId = active.data.current.fromCollectionId;
         const toCollectionId = over.data.current?.collectionId;
-        const gameId = active.data.current.gameId;
+        const gameSlug = active.data.current.gameSlug;
         if (fromCollectionId === toCollectionId) return;
 
-        moveGame({ fromCollectionId, toCollectionId, gameId },
+        moveGame({ fromCollectionId, toCollectionId, slug: gameSlug },
             {
                 onError: (error: any) => {
                     toast.error(error?.response?.data?.error || 'Error al mover el juego');
@@ -89,7 +90,7 @@ export default function Library() {
                             <div className="h-full bg-gray-900 border-r border-gray-800 " >
                                 <ScrollArea className="h-full">
                                     {library.map((collection: any) => (
-                                        <CollectionCard collection={collection} currentGame={currentGame} setCurrentGame={setCurrentGame} key={collection.id}></CollectionCard>
+                                        <CollectionCard collection={collection} currentGame={currentGame} setCurrentGame={setCurrentGame} key={collection.slug}></CollectionCard>
                                     ))}
 
                                     <Dialog>
@@ -126,7 +127,7 @@ export default function Library() {
 
                         <ResizablePanel defaultSize="70%">
                             {currentGame != null ? (
-                                <GameLibraryCard id={currentGame.id} />
+                                <GameLibraryCard slug={currentGame.slug} />
                             ) : (
                                 <div className="h-full flex items-center justify-center bg-gradient-to-b from-gray-900 to-gray-950">
                                     <div className="text-center space-y-4">

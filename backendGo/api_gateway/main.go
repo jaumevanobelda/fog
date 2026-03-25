@@ -8,8 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 
-	"api_gateway/proxy"
 	// "api_gateway/middleware"
+	"api_gateway/middleware"
+	"api_gateway/proxy"
 )
 
 func main() {
@@ -25,13 +26,23 @@ func main() {
 		AllowCredentials: true,
 	}))
 
-	// r.Use(middleware.Auth())
-
 	gameProxy, _ := proxy.NewReverseProxy("http://localhost:4001")
 	r.Any("/games/*path", func(c *gin.Context) {
-		// c.Request.URL.Path = c.Param("path")
 		gameProxy.ServeHTTP(c.Writer, c.Request)
 	})
+	// libraryProxy, _ := proxy.NewReverseProxy("http://localhost:4002")
+	// r.Any("/library/*path", func(c *gin.Context) {
+	// 	libraryProxy.ServeHTTP(c.Writer, c.Request)
+	// })
+
+	libraryProxy, _ := proxy.NewReverseProxy("http://localhost:4002")
+	libraryGroup := r.Group("/library")
+	libraryGroup.Use(middleware.JWTAuthMiddleware())
+	{
+		libraryGroup.Any("/*path", func(c *gin.Context) {
+			libraryProxy.ServeHTTP(c.Writer, c.Request)
+		})
+	}
 
 	r.Run(":" + os.Getenv("PORT"))
 }
