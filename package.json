@@ -3,6 +3,7 @@
     "frontend": "cd frontend && npm run dev",
     "backendRubyOnRails":"cd backendRubyOnRails && concurrently --names \"Api_gateway,Categories,Games,Auth,Cart,Order\" --prefix-colors \"red,yellow,blue,white,green,cyan\" \"cd api_gateway && rails server\" \"cd categories && rails server\" \"cd games && rails server\" \"cd auth && rails server\" \"cd cart && rails server\" \"cd orders && wsl bash -lc 'rails server'\" ",
     "backendGo":"cd backendGo && concurrently --names \"Api_gateway,Games,Library\" --prefix-colors \"red,blue,yellow\" \"cd api_gateway && air \" \"cd games && air\" \"cd library && air\" ",
-    "backend":"npx concurrently --names \"Rails,Go\" --prefix-colors \"red,yellow\" \"npm run backendRubyOnRails\" \"npm run backendGo\" "
+    "backendChat":"cd backendChat && npm run dev",
+    "backend":"npx concurrently --names \"Rails,Go,Chat\" --prefix-colors \"red,yellow,blue\" \"npm run backendRubyOnRails\" \"npm run backendGo\" \"npm run backendChat\" "
   }
 }

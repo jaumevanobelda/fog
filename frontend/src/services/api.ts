@@ -1,8 +1,9 @@
 import axios from "axios";
 import { logout, refresh } from "./authService";
 import { queryClient } from "@/utils/queryClient";
-const API_CLIENT_SERVER_URL = "http://localhost:4000";
 const API_AUTH_URL = "http://localhost:3000/api";
+const API_CLIENT_SERVER_URL = "http://localhost:4000";
+const API_CHAT_SERVER_URL = "http://localhost:5000";
 
 export const apiClientServer = axios.create({
     baseURL: API_CLIENT_SERVER_URL,
@@ -10,6 +11,10 @@ export const apiClientServer = axios.create({
 
 export const apiAuth = axios.create({
     baseURL: API_AUTH_URL,
+    withCredentials: true,
+});
+export const apiChat = axios.create({
+    baseURL: API_CHAT_SERVER_URL,
     withCredentials: true,
 });
 let refreshing = false;
@@ -96,3 +101,5 @@ const addAuthInterceptor = async (apiInstance: any) => {
 
 addAuthInterceptor(apiClientServer);
 addAuthInterceptor(apiAuth);
+addAuthInterceptor(apiChat);
+

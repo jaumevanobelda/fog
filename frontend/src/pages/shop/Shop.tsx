@@ -11,6 +11,7 @@ import { useDebounce } from '@/components/debounced/debounced';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { useEffect, useState } from 'react';
 import type { Filter } from '@/types/filter';
+import Chatbot from '@/components/chatbot/Chatbot';
 
 const gamesPerPage = 12;
 
@@ -110,6 +111,7 @@ export default function Shop() {
           }
         </div>
         {pagination(total || 0)}
+        <Chatbot />
       </>
     )
 
