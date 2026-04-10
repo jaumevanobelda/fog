@@ -12,6 +12,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { useEffect, useState } from 'react';
 import type { Filter } from '@/types/filter';
 import Chatbot from '@/components/chatbot/Chatbot';
+import { useUser } from '@/context/userContext';
 
 const gamesPerPage = 12;
 
@@ -44,6 +45,8 @@ export default function Shop() {
 
   const debouncedFilters = useDebounce(filters, 300);
   const [page, setPage] = useState(parseInt(localStorage.getItem('page') || "1"));
+
+  const {userLogged} = useUser();
 
   useEffect(() => {
     // if( JSON.stringify(debouncedFilters) ==  JSON.stringify(initialFilters()) && parseInt(localStorage.getItem('page')!) == page ) return
@@ -111,7 +114,7 @@ export default function Shop() {
           }
         </div>
         {pagination(total || 0)}
-        <Chatbot />
+        {userLogged && (<Chatbot />)}
       </>
     )
 

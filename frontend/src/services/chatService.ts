@@ -11,7 +11,7 @@ export async function ChatbotResponse(request: { messages: ChatMessage[], onChun
 		onDownloadProgress: (event) => {
 			const eventTarget = event.event?.target
 
-			console.log("EVENt ", eventTarget);
+			// console.log("EVENt ", eventTarget);
 
 			const responseText = eventTarget.responseText
 			if (eventTarget.status != 200) {
