@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_17_000001) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_13_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,6 +43,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_000001) do
     t.index ["deleted_at"], name: "idx_categories_deleted_at"
     t.index ["slug"], name: "idx_categories_slug", unique: true
     t.index ["slug"], name: "index_categories_on_slug", unique: true
+  end
+
+  create_table "collection_games", primary_key: ["collection_id", "game_id"], force: :cascade do |t|
+    t.bigint "collection_id", null: false
+    t.bigint "game_id", null: false
   end
 
   create_table "game_categories", force: :cascade do |t|
@@ -81,11 +86,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_000001) do
   end
 
   create_table "libraries", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.integer "game_id", null: false
+    t.datetime "created_at"
+    t.timestamptz "deleted_at"
+    t.bigint "game_id"
     t.datetime "purchased_at"
-    t.datetime "updated_at", null: false
-    t.integer "user_id", null: false
+    t.datetime "updated_at"
+    t.bigint "user_id"
+    t.index ["deleted_at"], name: "idx_libraries_deleted_at"
     t.index ["game_id"], name: "index_libraries_on_game_id"
     t.index ["user_id", "game_id"], name: "index_libraries_on_user_id_and_game_id", unique: true
   end
@@ -126,11 +133,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_000001) do
     t.index ["user_id"], name: "index_refresh_sessions_on_user_id"
   end
 
+  create_table "user_collections", force: :cascade do |t|
+    t.text "nom", null: false
+    t.text "slug", null: false
+    t.bigint "user_id", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.datetime "created_at"
     t.timestamptz "deleted_at"
     t.text "email"
     t.text "foto"
+    t.boolean "isActive", default: false, null: false
     t.text "password"
     t.string "password_digest"
     t.text "role"
@@ -150,6 +164,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_17_000001) do
   add_foreign_key "game_categories", "games"
   add_foreign_key "game_categories", "games", name: "fk_game_categories_game"
   add_foreign_key "game_images", "games"
+  add_foreign_key "libraries", "games", name: "fk_libraries_game"
   add_foreign_key "order_games", "orders"
   add_foreign_key "refresh_sessions", "users"
 end

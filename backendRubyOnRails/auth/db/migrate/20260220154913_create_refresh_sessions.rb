@@ -1,6 +1,6 @@
 class CreateRefreshSessions < ActiveRecord::Migration[8.1]
   def change
-    create_table :refresh_sessions do |t|
+    create_table :refresh_sessions, if_not_exists: true do |t|
       t.references :user, null: false, foreign_key: true
       t.string :device_id, null: false
       t.string :family_id, null: false
@@ -12,7 +12,7 @@ class CreateRefreshSessions < ActiveRecord::Migration[8.1]
       t.timestamps
     end
 
-    add_index :refresh_sessions, :family_id, unique: true
-    add_index :refresh_sessions, [:user_id, :device_id]
+    add_index :refresh_sessions, :family_id, unique: true, if_not_exists: true
+    add_index :refresh_sessions, [:user_id, :device_id], if_not_exists: true
   end
 end

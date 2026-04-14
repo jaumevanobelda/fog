@@ -1,13 +1,13 @@
 class CreateCategories < ActiveRecord::Migration[8.1]
   def up
-    create_table :categories do |t|
+    create_table :categories, if_not_exists: true do |t|
       t.string  :nom
       t.boolean :isActive, default: true, null: false
       t.string  :slug
       t.timestamps
     end unless table_exists?(:categories)
 
-    add_index :categories, :slug, unique: true unless index_exists?(:categories, :slug)
+    add_index :categories, :slug, unique: true, if_not_exists: true unless index_exists?(:categories, :slug)
   end
 
   def down

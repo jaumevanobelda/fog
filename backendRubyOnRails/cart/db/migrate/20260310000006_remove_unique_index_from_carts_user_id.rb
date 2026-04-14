@@ -6,7 +6,7 @@ class RemoveUniqueIndexFromCartsUserId < ActiveRecord::Migration[8.1]
       remove_index :carts, column: :user_id
     end
     unless index_exists?(:carts, :user_id, unique: false)
-      add_index :carts, :user_id
+      add_index :carts, :user_id, if_not_exists: true
     end
   end
 end

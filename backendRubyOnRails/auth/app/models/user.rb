@@ -1,6 +1,7 @@
 class User < ApplicationRecord
     before_save :generate_foto
     has_secure_password
+    attribute :role, :string, default: "CLIENT"
 
     has_many :refresh_sessions, dependent: :destroy
 

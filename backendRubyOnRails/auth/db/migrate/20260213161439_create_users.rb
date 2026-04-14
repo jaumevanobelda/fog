@@ -1,6 +1,6 @@
 class CreateUsers < ActiveRecord::Migration[8.1]
   def change
-    create_table :users do |t|
+    create_table :users, if_not_exists: true do |t|
       t.string :username
       t.string :email
       # t.string :password
@@ -11,6 +11,6 @@ class CreateUsers < ActiveRecord::Migration[8.1]
       t.index :email, unique: true
       t.timestamps
     end
-    # add_index :users, :username, unique: true unless index_exists?(:users, :username)
+    # add_index :users, :username, unique: true, if_not_exists: true unless index_exists?(:users, :username)
   end
 end

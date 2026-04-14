@@ -10,7 +10,6 @@ import (
 
 	database "games/config"
 	"games/handler"
-	"games/models"
 	"games/repository"
 	"games/routes"
 )
@@ -22,8 +21,8 @@ func main() {
 	if err := database.Connect(); err != nil {
 		log.Fatal(err)
 	}
-	database.DB.AutoMigrate(&models.Game{})
-	database.DB.AutoMigrate(&models.Category{})
+	// database.DB.AutoMigrate(&models.Game{})
+	// database.DB.AutoMigrate(&models.Category{})
 	r := gin.Default()
 	gameRepo := repository.NewGameRepository(database.DB)
 	userRepo := repository.NewUserRepository(database.DB)
