@@ -71,7 +71,7 @@ export default function Header() {
   function loggedMenu() {
     return (
       <>
-        <Popover>
+        {/* <Popover>
           <PopoverTrigger asChild>
             <Button variant="ghost" size="icon" className="rounded-full text-gray-300 hover:text-white hover:bg-gray-800/50">
               <UserRoundIcon className="h-5 w-5" />
@@ -80,7 +80,7 @@ export default function Header() {
           <PopoverContent className="w-80 p-0" align="center">
             <Friends />
           </PopoverContent>
-        </Popover>
+        </Popover> */}
 
         <Cart />
         <DropdownMenu>
