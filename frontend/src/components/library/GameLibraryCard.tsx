@@ -29,7 +29,7 @@ export default function GameLibraryCard({ slug }: { slug: string }) {
                     <img
                         src={game.images?.[0] || '/placeholder-game.png'}
                         alt={game.nom}
-                        className='w-full h-auto max-h-[70vh] object-cover'
+                        className='w-full h-auto max-h-[70vh] object-contain'
                     />
                 </div>
 

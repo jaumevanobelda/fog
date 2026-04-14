@@ -4,7 +4,7 @@ import { toast } from 'sonner';
 import Loading from '@/components/ui/loading';
 
 
-export default function PrivateRoute({ allowedRoles = [] }: { allowedRoles?: string[] }) {
+export default function Logged({ allowedRoles = [] }: { allowedRoles?: string[] }) {
     const { data: user, isLoading } = useMe()
 
     if (isLoading) return <Loading/>

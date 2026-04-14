@@ -39,7 +39,7 @@ export function GameImageCarousel({ images }: { images: Array<string> }) {
                   <img
                     src={image}
                     alt={`Game image ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                   />
                 </div>
               </CarouselItem>
