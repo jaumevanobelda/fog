@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   scope :auth do
     post 'register', to: 'auth#register'
     post 'login', to: 'auth#login'
+    post 'confirm', to: 'auth#confirm'
     get 'current', to: 'auth#current'
     post 'refresh', to: 'auth#refresh'
     post 'logout', to: 'auth#logout'

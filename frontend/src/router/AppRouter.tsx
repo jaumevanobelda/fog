@@ -9,6 +9,7 @@ import PrivateRoute from "@/guards/PrivateRoute";
 import Library from "@/pages/library/Library";
 import DashboardGames from "@/pages/dashboardGames/DashboardGames";
 import DashboardCategories from "@/pages/dashboardCategories/DashboardCategories";
+import Confirm from "@/pages/confirm/Confirm";
 
 export default function AppRouter() {
   return (
@@ -18,6 +19,7 @@ export default function AppRouter() {
           <Route index element={<Shop />} />
           <Route path="details/:slug" element={<Details />} />
           <Route path="auth/:tipo" element={<Auth />} />
+          <Route path="confirm/:confirm_token" element={<Confirm />} />
           <Route path="checkout/success" element={<CheckoutSuccess />} />
           <Route path="checkout/cancel" element={<CheckoutCancel />} />
           <Route element={<PrivateRoute />}>

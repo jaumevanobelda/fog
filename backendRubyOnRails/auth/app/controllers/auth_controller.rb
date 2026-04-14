@@ -7,13 +7,33 @@ class AuthController < ApplicationController
     end
 
     def register
-        pp "REGISTER"
-        @user = User.new(user_params)
-        if @user.save
-            create_refresh
+        @user = User.where(email: params[:email] , isActive: false).first
+        if @user != nil     
+            @user.update!(user_params)
         else
-            render json: { errors: @user.errors }, status: :unprocessable_entity
+            @user = User.new(user_params)
         end
+        if @user.save
+            confirm_token = TokenService.generate_confirm_token(@user)
+            UserMailer.confirm_email(@user,confirm_token).deliver_later
+            render json:{},status:200
+        else
+            pp "EERRRO"
+            pp @user.errors
+            render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
+        end
+    end
+
+    def confirm 
+        confirm_token = params[:confirm_token]
+        return render json: { error:"token not found"}, status:400 unless confirm_token
+        decoded = JWT.decode(confirm_token, ENV.fetch("JWT_SECRET_CONFIRM")).first
+        @user = User.find(decoded['user_id'])
+        return render json: { error:"Usuario no encontrado"}, status:404 unless confirm_token
+        return render json: { error: "Usuario ya confirmado" }, status:400 if @user.isActive
+        
+        @user.update!(isActive:true)
+        create_refresh
     end
 
     def current
@@ -51,7 +71,7 @@ class AuthController < ApplicationController
     def refresh
         refresh_token = request.headers["X-Refresh-Token"]
         return render json: { error:"token not found"}, status: :unauthorized unless refresh_token
-        payload = JWT.decode(refresh_token, ENV.fetch("JWT_SECRET")).first
+        payload = JWT.decode(refresh_token, ENV.fetch("JWT_SECRET_REFRESH")).first
         # pp payload
         return render json: { error:"invalid token"}, status: :unauthorized unless payload
 

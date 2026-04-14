@@ -16,6 +16,10 @@ module Api
         def register
             proxy(:post, "#{AUTH_SERVICE}/auth/register")
         end
+        
+        def confirm
+            proxy(:post, "#{AUTH_SERVICE}/auth/confirm")
+        end
 
         def current
             proxy_get("#{AUTH_SERVICE}/auth/current")
@@ -111,7 +115,7 @@ module Api
             proxy(:post, "#{ORDERS_SERVICE}/order/confirm")
         end
         def cancel_order
-            proxy(:post, "#{ORDERS_SERVICE}/order/cancel")
+            proxy(:post, "#{ORDERS_SERVICE}/order/cancel")  
         end
 
         def authenticate(allowed_roles = [])

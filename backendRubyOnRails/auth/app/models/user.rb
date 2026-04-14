@@ -4,11 +4,12 @@ class User < ApplicationRecord
 
     has_many :refresh_sessions, dependent: :destroy
 
-    validates :username, :email, :password, presence: true
+    validates :username, :email, presence: true
+    validates :password, presence: true, on: :create
     validates :email, :username, uniqueness: true, on: :create
 
     def generate_foto
-        if self.foto == nil || self.foto.start_with("https://dummyimage.com")
+        if self.foto == nil || self.foto.start_with?("https://dummyimage.com")
             self.foto = "https://dummyimage.com/250x250&text=#{self.username.parameterize}"
         end
     end

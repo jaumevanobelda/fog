@@ -10,9 +10,22 @@ function getDeviceId(): string {
     return deviceId;
 }
 
-export async function login(req: any) {
-    const res = await apiAuth.post(`auth/${req.tipo}`, { ...req.user, device_id: getDeviceId() });
+export async function login(user: any) {
+    const res = await apiAuth.post(`auth/login`, { ...user, device_id: getDeviceId() });
     console.log("REs ", res);
+    broadcastAuth("LOGIN");
+    return await res.data;
+}
+export async function register(user: any) {
+    const res = await apiAuth.post(`auth/register`, user );
+    console.log("REs ", res);
+    return await res.data;
+}
+export async function confirm(confirm_token: string) {
+    const res = await apiAuth.post("auth/confirm", { confirm_token, device_id: getDeviceId() });
+    console.log("REs ", res);
+    console.log("Confirm login");
+    
     broadcastAuth("LOGIN");
     return await res.data;
 }
@@ -30,7 +43,6 @@ export async function getCurrent() {
 export async function refresh() {
     const res = await apiAuth.post("auth/refresh");
     return res.data;
-
 }
 
 export async function logout() {
@@ -40,7 +52,7 @@ export async function logout() {
         queryClient.setQueryData(['me'], null);
         queryClient.removeQueries({ queryKey: ['me'] });
         localStorage.removeItem('token');
-
+        broadcastAuth("LOGOUT");
         return res.data;
     } catch (error) {
         console.log("Error logout", error);

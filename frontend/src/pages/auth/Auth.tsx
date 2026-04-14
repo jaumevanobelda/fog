@@ -2,7 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import './Auth.css';
-import { useLogin } from '../../mutations/auth/useLogin';
+import { useLogin, useRegister } from '../../mutations/auth/useLogin';
+import { toast } from 'sonner';
 
 export default function Auth() {
 
@@ -11,7 +12,8 @@ export default function Auth() {
     const [error_sesio, setErrorSesio] = useState({ error: false, data: "" });
     const navigate = useNavigate();
     // const { mutate, error, data } = useLogin()
-    const { mutateAsync } = useLogin()
+    const { mutateAsync: login } = useLogin();
+    const { mutateAsync: register } = useRegister();
     return (
         <>
             <div className="auth-page">
@@ -56,23 +58,29 @@ export default function Auth() {
     async function submit() {
 
         try {
-            let data = await mutateAsync({ user, tipo });
-            console.log("DATA ", await data);
-
-            setErrorSesio({ error: false, data: "" });
-            navigate("/");
-            // window.location.reload();
+            if (tipo === "login") {
+                await login(user);
+                setErrorSesio({ error: false, data: "" });
+                navigate("/");
+            } else {
+                await register(user);
+                setErrorSesio({ error: false, data: "" });
+                toast.success("Usuario registrado se te ha enviado un correo para confimar tu identidad")
+                navigate("/");
+            }
 
         } catch (error: any) {
             console.log("ERROR res", error);
 
-            if (error.response.data.tipo == 'duplicated') {
-                setErrorSesio({ error: true, data: `Ya existe un ${error.response.data.error}` });
-            } else {  
-                // setErrorSesio({ error: true, data: error.response.data.error.message  });
-                setErrorSesio({ error: true, data: error.response.data.error.message ||error.response.data.error   || "Error inseperado" });
-            }
+            const resData = error.response?.data || {};
 
+            if (resData.tipo === 'duplicated') {
+                setErrorSesio({ error: true, data: `Ya existe un ${resData.error}` });
+            } else if (resData.errors) {
+                setErrorSesio({ error: true, data: resData.errors.join(', ') });
+            } else {
+                setErrorSesio({ error: true, data: resData.error?.message || resData.error || "Error inesperado" });
+            }
         }
     }
 

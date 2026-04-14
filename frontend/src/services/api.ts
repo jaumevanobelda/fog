@@ -20,9 +20,11 @@ export const apiChat = axios.create({
 let refreshing = false;
 
 const authChannel = new BroadcastChannel("auth");
-
+console.log("NEW authChannel ", authChannel);
 authChannel.onmessage = (event) => {
     // const  type = event.data;
+    console.log("authChannel ", authChannel);
+    
     switch (event.data.type) {
         case "BEGIN_REFRESHING":
             // console.log("Refresh ",);
@@ -42,13 +44,14 @@ authChannel.onmessage = (event) => {
             queryClient.removeQueries({ queryKey: ["me"] });
             break;
         case "LOGIN":
-            console.log("LOGIN");
+            console.log("LOGIN ", event);
             queryClient.invalidateQueries({ queryKey: ["me"] });
             break;
     }
 };
 
 export function broadcastAuth(type: string, data?: any) {
+    console.log("broadcastAuth ", { type ,data});
     authChannel.postMessage({ type, ...data });
 }
 const addAuthInterceptor = async (apiInstance: any) => {

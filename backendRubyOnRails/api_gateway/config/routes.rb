@@ -3,6 +3,7 @@ Rails.application.routes.draw do
     scope  :auth do
       post "login", to: "gateway#login"
       post "register", to: "gateway#register"
+      post 'confirm', to: 'gateway#confirm'
       post "refresh", to: "gateway#refresh"
       post "logout", to: "gateway#logout"
       post "logoutAll", to: "gateway#logoutAll"
