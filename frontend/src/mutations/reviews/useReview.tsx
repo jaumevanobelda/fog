@@ -9,8 +9,8 @@ export function useCreateReview() {
     onSuccess(data) {
       console.log("DATA ", data);
       toast.success(data.message);
-      queryClient.invalidateQueries({ queryKey: ['Reviews', data.review.game_slug], });
-      queryClient.invalidateQueries({ queryKey: ['game', data.review.game_slug] });
+      queryClient.invalidateQueries({ queryKey: ['Reviews', data.slug], });
+      queryClient.invalidateQueries({ queryKey: ['game', data.slug] });
     }
   });
 }

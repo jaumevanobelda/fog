@@ -1,8 +1,10 @@
 package handler
 
 import (
+	"encoding/json"
 	"fmt"
 	"games/repository"
+	"io"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,7 +20,8 @@ func NewGameHandler(repo_game repository.GameRepository, repo_user repository.Us
 }
 
 func (h *GameHandler) GetGame(c *gin.Context) {
-	game, err := h.repo_game.FindOne(c.Param("slug"))
+	slug := c.Param("slug")
+	game, err := h.repo_game.FindOne(slug)
 	if err != nil {
 		fmt.Println(err)
 		c.JSON(http.StatusNotFound, gin.H{"error": err})
@@ -32,6 +35,39 @@ func (h *GameHandler) GetGame(c *gin.Context) {
 	} else {
 		res["developer"] = developer.Username
 	}
+
+	numReviews := 0
+	rating := 0
+
+	resp, errReq := http.Get(fmt.Sprintf("http://localhost:4003/review/%s", slug))
+	if errReq == nil && resp.StatusCode == http.StatusOK {
+		var reviews []struct {
+			Positive bool `json:"positive"`
+		}
+
+		body, _ := io.ReadAll(resp.Body)
+		if errJSON := json.Unmarshal(body, &reviews); errJSON == nil {
+			numReviews = len(reviews)
+			if numReviews > 0 {
+				positives := 0
+				for _, r := range reviews {
+					if r.Positive {
+						positives++
+					}
+				}
+				rating = (positives * 100) / numReviews
+			}
+		}
+		resp.Body.Close()
+	} else {
+		if errReq != nil {
+			fmt.Println("Error connecting to reviews service:", errReq)
+		}
+	}
+
+	res["num_reviews"] = numReviews
+	res["rating"] = rating
+
 	c.JSON(http.StatusOK, res)
 }
 

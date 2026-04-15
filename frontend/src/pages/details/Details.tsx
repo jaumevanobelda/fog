@@ -78,7 +78,7 @@ export default function Details() {
         </div>
 
       </div>
-      {/* <Reviews slug={game.slug} /> */}
+      <Reviews slug={game.slug} />
     </>
   )
 

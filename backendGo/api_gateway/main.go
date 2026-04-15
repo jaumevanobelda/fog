@@ -30,10 +30,6 @@ func main() {
 	r.Any("/games/*path", func(c *gin.Context) {
 		gameProxy.ServeHTTP(c.Writer, c.Request)
 	})
-	// libraryProxy, _ := proxy.NewReverseProxy("http://localhost:4002")
-	// r.Any("/library/*path", func(c *gin.Context) {
-	// 	libraryProxy.ServeHTTP(c.Writer, c.Request)
-	// })
 
 	libraryProxy, _ := proxy.NewReverseProxy("http://localhost:4002")
 	libraryGroup := r.Group("/library")
@@ -41,6 +37,23 @@ func main() {
 	{
 		libraryGroup.Any("/*path", func(c *gin.Context) {
 			libraryProxy.ServeHTTP(c.Writer, c.Request)
+		})
+	}
+
+	reviewsProxy, _ := proxy.NewReverseProxy("http://localhost:4003")
+
+	r.GET("/review/*path", func(c *gin.Context) {
+		reviewsProxy.ServeHTTP(c.Writer, c.Request)
+	})
+
+	reviewsGroupSecured := r.Group("/review")
+	reviewsGroupSecured.Use(middleware.JWTAuthMiddleware())
+	{
+		reviewsGroupSecured.POST("/*path", func(c *gin.Context) {
+			reviewsProxy.ServeHTTP(c.Writer, c.Request)
+		})
+		reviewsGroupSecured.DELETE("/*path", func(c *gin.Context) {
+			reviewsProxy.ServeHTTP(c.Writer, c.Request)
 		})
 	}
 

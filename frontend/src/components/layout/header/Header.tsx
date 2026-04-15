@@ -32,11 +32,11 @@ export default function Header() {
                 <LibraryIcon className="h-4 w-4" />
                 <span>Biblioteca</span>
               </Link>
-              {["DEVELOPER", "ADMIN"].includes(user?.role!) ?
+              {["DEVELOPER", "ADMIN", "SUPERADMIN"].includes(user?.role!) ?
                 <Link to="/dashboardGames" className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all">
                   <span>Administrar juegos</span>
                 </Link> : <></>}
-              {user?.role! === "ADMIN" ?
+              {["ADMIN","SUPERADMIN"].includes(user?.role!) ?
                 <Link to="/dashboardCategories" className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all">
                   <span>Administrar categorias</span>
                 </Link>: <></>}
