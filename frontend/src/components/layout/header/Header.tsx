@@ -40,6 +40,10 @@ export default function Header() {
                 <Link to="/dashboardCategories" className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all">
                   <span>Administrar categorias</span>
                 </Link>: <></>}
+              {["ADMIN", "SUPERADMIN"].includes(user?.role!) ?
+                <Link to="/dashboardUsers" className="flex items-center gap-2 px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-gray-800/50 transition-all">
+                  <span>Administrar Usuarios</span>
+                </Link> : <></>}
             </nav>
           </div>
 

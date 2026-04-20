@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_13_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_17_000000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -133,6 +133,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_000000) do
     t.index ["user_id"], name: "index_refresh_sessions_on_user_id"
   end
 
+  create_table "reviews", force: :cascade do |t|
+    t.timestamptz "created_at"
+    t.timestamptz "deleted_at"
+    t.bigint "game_id"
+    t.boolean "positive"
+    t.text "text"
+    t.timestamptz "updated_at"
+    t.bigint "user_id"
+    t.index ["deleted_at"], name: "idx_reviews_deleted_at"
+    t.index ["user_id", "game_id"], name: "idx_user_game", unique: true
+  end
+
   create_table "user_collections", force: :cascade do |t|
     t.text "nom", null: false
     t.text "slug", null: false
@@ -143,6 +155,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_000000) do
     t.datetime "created_at"
     t.timestamptz "deleted_at"
     t.text "email"
+    t.boolean "email_verified", default: false
     t.text "foto"
     t.boolean "isActive", default: false, null: false
     t.text "password"
@@ -167,4 +180,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_13_000000) do
   add_foreign_key "libraries", "games", name: "fk_libraries_game"
   add_foreign_key "order_games", "orders"
   add_foreign_key "refresh_sessions", "users"
+  add_foreign_key "reviews", "games", name: "fk_reviews_game"
+  add_foreign_key "reviews", "users", name: "fk_reviews_user"
 end

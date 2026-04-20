@@ -7,6 +7,9 @@ Rails.application.routes.draw do
     post 'refresh', to: 'auth#refresh'
     post 'logout', to: 'auth#logout'
     post 'logoutAll', to: 'auth#logoutAll'
+    post 'createUser', to: 'admin_panel#createUser'
+    get 'getUsers', to: 'admin_panel#getUsers'
+    put 'editActiveUser', to: 'admin_panel#editActiveUser'
 
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

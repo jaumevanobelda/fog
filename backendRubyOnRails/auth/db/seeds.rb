@@ -1,7 +1,7 @@
 puts "Creando Usuarios Admin y Developer..."
 
 admin = User.find_or_initialize_by(email: "admin@admin.com")
-admin.update!(username: "admin", password: "a", role: "ADMIN", isActive: true)
+admin.update!(username: "admin", password: "a", role: "SUPERADMIN", isActive: true)
 puts "-> Admin creado (admin / a)"
 
 dev1 = User.find_or_initialize_by(email: "dev1@nintendo.com")

@@ -8,6 +8,9 @@ Rails.application.routes.draw do
       post "logout", to: "gateway#logout"
       post "logoutAll", to: "gateway#logoutAll"
       get "current", to:"gateway#current"
+      post 'createUser', to: 'gateway#createUser'
+      get 'getUsers', to: 'gateway#getUsers'
+      put 'editActiveUser', to: 'gateway#editActiveUser'
     end
 
     scope :categoria do

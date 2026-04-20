@@ -5,8 +5,8 @@ module Api
         AUTH_SERVICE = "http://localhost:3003"
         CART_SERVICE = "http://localhost:3004"
         ORDERS_SERVICE = "http://localhost:3005"
-        before_action -> { authenticate("ADMIN") }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game ]
-        before_action -> { authenticate([ "ADMIN", "DEVELOPER" ]) }, only: %i[get_game get_games post_game put_game delete_game]
+        before_action -> { authenticate(["ADMIN","SUPERADMIN"]) }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game createUser getUsers editActiveUser]
+        before_action -> { authenticate([ "ADMIN","SUPERADMIN","DEVELOPER" ]) }, only: %i[get_game get_games post_game put_game delete_game]
         before_action -> { cookies.delete(:refresh_token) }, only: %i[ logout]
         before_action -> { authenticate() }, only: %i[current logout logoutAll clear_cart remove_from_cart get_cart add_to_cart create_checkout_order confirm_order cancel_order]
         def login
@@ -37,6 +37,18 @@ module Api
         def logoutAll
             cookies.delete(:refresh_token)
             proxy(:post, "#{AUTH_SERVICE}/auth/logoutAll")
+        end
+
+        def createUser
+            proxy(:post, "#{AUTH_SERVICE}/auth/createUser")
+        end
+
+        def getUsers
+            proxy_get("#{AUTH_SERVICE}/auth/getUsers")
+        end
+        
+        def editActiveUser
+            proxy(:put, "#{AUTH_SERVICE}/auth/editActiveUser")
         end
 
         def get_categoria
@@ -125,6 +137,9 @@ module Api
             decoded = JWT.decode(token, ENV.fetch("JWT_SECRET"), true, algorithm: "HS256")
             @user_id = decoded[0]["user_id"]
             @role = decoded[0]["role"]
+            user = User.find(decoded[0]["user_id"])
+            render json: {error:"User not found"}, status:401 if user.nil?
+            render json: {error:"User not active"}, status:401 if user.isActive == false
             if allowed_roles.length > 0  && (allowed_roles && Array(@role)).any? == false
                 pp allowed_roles
                 pp Array(@role)

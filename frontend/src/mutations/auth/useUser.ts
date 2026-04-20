@@ -1,7 +1,20 @@
 import { useMutation } from '@tanstack/react-query'
 import { queryClient } from '../../utils/queryClient';
-import { acceptFriendRequest, rejectFriendRequest, sendFriendRequest } from '@/services/authService';
+import { acceptFriendRequest, createUser, editActiveUser, rejectFriendRequest, sendFriendRequest } from '@/services/authService';
 import { toast } from 'sonner';
+
+export function useCreateUser() {
+    return useMutation({
+        mutationFn: createUser,
+        onSuccess() { queryClient.invalidateQueries({ queryKey: ['GetUsers'] }) },
+    });
+}
+export function useEditActiveUser() {
+    return useMutation({
+        mutationFn: editActiveUser,
+        onSuccess() { queryClient.invalidateQueries({ queryKey: ['GetUsers'] }) },
+    });
+}
 
 export function useAcceptFriendRequest() {
     return useMutation({

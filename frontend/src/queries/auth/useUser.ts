@@ -1,7 +1,14 @@
 
-import { getFriendRequests, getFriends, getSendedFriendRequests } from '@/services/authService'
+import { getFriendRequests, getFriends, getSendedFriendRequests, getUsers } from '@/services/authService'
 import type { User } from '@/types/user'
 import { useQuery } from '@tanstack/react-query'
+
+export function useGetUsers() {
+  return useQuery({
+    queryKey: ['GetUsers'],
+    queryFn: getUsers,
+  })
+}
 
 export function useFriends() {
   return useQuery<User[]>({

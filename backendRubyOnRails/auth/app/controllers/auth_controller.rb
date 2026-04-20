@@ -2,12 +2,13 @@ class AuthController < ApplicationController
     def login
         @user = User.by_username_or_email(params[:username]).first
         return render json: { error: "No se ha encontrado el usuario " }, status: :not_found if @user == nil
+        return render json: { error: "El usuario no esta activado" }, status: :not_found if @user.isActive == false
         return render json: { error: "Contraseña incorrecta" }, status: :unauthorized if !@user&.authenticate(params[:password])
         create_refresh
     end
 
     def register
-        @user = User.where(email: params[:email] , isActive: false).first
+        @user = User.where(email: params[:email] , isActive: false,email_verified: false).first
         if @user != nil     
             @user.update!(user_params)
         else
@@ -18,7 +19,6 @@ class AuthController < ApplicationController
             UserMailer.confirm_email(@user,confirm_token).deliver_later
             render json:{},status:200
         else
-            pp "EERRRO"
             pp @user.errors
             render json: { errors: @user.errors.full_messages }, status: :unprocessable_entity
         end
@@ -29,10 +29,12 @@ class AuthController < ApplicationController
         return render json: { error:"token not found"}, status:400 unless confirm_token
         decoded = JWT.decode(confirm_token, ENV.fetch("JWT_SECRET_CONFIRM")).first
         @user = User.find(decoded['user_id'])
-        return render json: { error:"Usuario no encontrado"}, status:404 unless confirm_token
+        return render json: { error:"Usuario no encontrado"}, status:404 if @user.nil?
         return render json: { error: "Usuario ya confirmado" }, status:400 if @user.isActive
+        return render json: { error: "Usuario ya verificado" }, status:400 if @user.email_verified
+
         
-        @user.update!(isActive:true)
+        @user.update!(isActive:true,email_verified:true)
         create_refresh
     end
 

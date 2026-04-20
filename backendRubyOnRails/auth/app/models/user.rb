@@ -5,9 +5,12 @@ class User < ApplicationRecord
 
     has_many :refresh_sessions, dependent: :destroy
 
-    validates :username, :email, presence: true
+    validates :username, :email, presence: true 
     validates :password, presence: true, on: :create
-    validates :email, :username, uniqueness: true, on: :create
+    
+    validates :email,:username,on: :create,  uniqueness: { message: "%{value} ya esta en uso" }
+
+    validates :email, format: { with: URI::MailTo::EMAIL_REGEXP ,message: "invalido"}
 
     def generate_foto
         if self.foto == nil || self.foto.start_with?("https://dummyimage.com")
@@ -26,7 +29,7 @@ class User < ApplicationRecord
         { user_id: id, family_id: family_id, exp: 15.days.from_now.to_i }
     end
 
-    def as_json
-        super({ only: %i[username email role foto] })
+    def as_json(options = {})
+        super({ only: %i[username email role foto ]}.merge(options || {}))
     end
 end

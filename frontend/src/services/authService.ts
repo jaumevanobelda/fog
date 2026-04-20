@@ -44,6 +44,18 @@ export async function refresh() {
     const res = await apiAuth.post("auth/refresh");
     return res.data;
 }
+export async function createUser(user:any) {
+    const res = await apiAuth.post("auth/createUser",user);
+    return res.data;
+}
+export async function getUsers() {
+    const res = await apiAuth.get("auth/getUsers");
+    return res.data;
+}
+export async function editActiveUser(user: any) {
+    const res = await apiAuth.put("auth/editActiveUser", user);
+    return res.data;
+}
 
 export async function logout() {
     console.log("Logout");

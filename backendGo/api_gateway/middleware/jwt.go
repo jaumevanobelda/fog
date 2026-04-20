@@ -12,7 +12,6 @@ import (
 
 func JWTAuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		// Permitir requests OPTIONS (CORS preflight) sin validación de JWT
 		if c.Request.Method == "OPTIONS" {
 			c.Next()
 			return
