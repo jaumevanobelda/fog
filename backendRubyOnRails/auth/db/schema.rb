@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_04_17_000000) do
+ActiveRecord::Schema[8.1].define(version: 2026_04_21_000002) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,6 +48,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_000000) do
   create_table "collection_games", primary_key: ["collection_id", "game_id"], force: :cascade do |t|
     t.bigint "collection_id", null: false
     t.bigint "game_id", null: false
+  end
+
+  create_table "friend_requests", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "sender_user_id", null: false
+    t.string "status", default: "PENDING", null: false
+    t.bigint "target_user_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["sender_user_id", "target_user_id"], name: "index_friend_requests_on_sender_user_id_and_target_user_id", unique: true
+    t.index ["target_user_id"], name: "index_friend_requests_on_target_user_id"
+  end
+
+  create_table "friends", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "friend_id", null: false
+    t.bigint "target_user_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["target_user_id", "friend_id"], name: "index_friends_on_target_user_id_and_friend_id", unique: true
+    t.index ["target_user_id"], name: "index_friends_on_target_user_id"
   end
 
   create_table "game_categories", force: :cascade do |t|
@@ -172,6 +191,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_04_17_000000) do
   end
 
   add_foreign_key "cart_games", "carts"
+  add_foreign_key "friend_requests", "users", column: "sender_user_id"
+  add_foreign_key "friend_requests", "users", column: "target_user_id"
+  add_foreign_key "friends", "users", column: "friend_id"
+  add_foreign_key "friends", "users", column: "target_user_id"
   add_foreign_key "game_categories", "categories"
   add_foreign_key "game_categories", "categories", name: "fk_game_categories_category"
   add_foreign_key "game_categories", "games"

@@ -14,6 +14,7 @@ export function useFriends() {
   return useQuery<User[]>({
     queryKey: ['Friends'],
     queryFn: getFriends,
+    staleTime:30000
   })
 }
 
@@ -21,6 +22,7 @@ export function useFriendRequests() {
   return useQuery<User[]>({
     queryKey: ['FriendRequests'],
     queryFn: getFriendRequests,
+    staleTime:30000
   })
 }
 

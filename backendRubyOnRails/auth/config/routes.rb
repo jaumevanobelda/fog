@@ -11,6 +11,18 @@ Rails.application.routes.draw do
     get 'getUsers', to: 'admin_panel#getUsers'
     put 'editActiveUser', to: 'admin_panel#editActiveUser'
 
+    scope :friends do 
+      get '', to: 'friends#getFriends'
+      get 'request', to: 'friends#getFriendRequests'
+      get 'request/sended', to: 'friends#getSendedFriendRequests'
+      post 'request/send/:username', to: 'friends#sendFriendRequest'
+      post 'request/accept/:username', to: 'friends#acceptFriendRequest'
+      post 'request/reject/:username', to: 'friends#rejectFriendRequest'
+    end
+
+
+
+
   end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

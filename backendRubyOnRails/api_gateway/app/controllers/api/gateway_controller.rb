@@ -8,7 +8,7 @@ module Api
         before_action -> { authenticate(["ADMIN","SUPERADMIN"]) }, only: %i[post_categoria put_categoria delete_categoria activate_categoria activate_game createUser getUsers editActiveUser]
         before_action -> { authenticate([ "ADMIN","SUPERADMIN","DEVELOPER" ]) }, only: %i[get_game get_games post_game put_game delete_game]
         before_action -> { cookies.delete(:refresh_token) }, only: %i[ logout]
-        before_action -> { authenticate() }, only: %i[current logout logoutAll clear_cart remove_from_cart get_cart add_to_cart create_checkout_order confirm_order cancel_order]
+        before_action -> { authenticate() }, only: %i[current logout logoutAll clear_cart remove_from_cart get_cart add_to_cart create_checkout_order confirm_order cancel_order getFriends getFriendRequests getSendedFriendRequests sendFriendRequest acceptFriendRequest rejectFriendRequest]
         def login
             proxy(:post, "#{AUTH_SERVICE}/auth/login")
         end
@@ -49,6 +49,32 @@ module Api
         
         def editActiveUser
             proxy(:put, "#{AUTH_SERVICE}/auth/editActiveUser")
+        end
+
+        def getFriends
+            proxy_get("#{AUTH_SERVICE}/auth/friends")
+        end
+
+        def getFriendRequests
+            proxy_get("#{AUTH_SERVICE}/auth/friends/request")
+        end
+
+
+        def getSendedFriendRequests
+            proxy_get("#{AUTH_SERVICE}/auth/friends/request/sended")
+        end
+
+
+        def sendFriendRequest
+            proxy(:post, "#{AUTH_SERVICE}/auth/friends/request/send/#{params[:username]}")
+        end
+
+        def acceptFriendRequest
+            proxy(:post, "#{AUTH_SERVICE}/auth/friends/request/accept/#{params[:username]}")
+        end
+
+        def rejectFriendRequest
+            proxy(:post, "#{AUTH_SERVICE}/auth/friends/request/reject/#{params[:username]}")
         end
 
         def get_categoria

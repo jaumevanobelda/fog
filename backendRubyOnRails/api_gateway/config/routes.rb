@@ -11,6 +11,14 @@ Rails.application.routes.draw do
       post 'createUser', to: 'gateway#createUser'
       get 'getUsers', to: 'gateway#getUsers'
       put 'editActiveUser', to: 'gateway#editActiveUser'
+      scope :friends do 
+        get '', to: 'gateway#getFriends'
+        get 'request', to: 'gateway#getFriendRequests'
+        get 'request/sended', to: 'gateway#getSendedFriendRequests'
+        post 'request/send/:username', to: 'gateway#sendFriendRequest'
+        post 'request/accept/:username', to: 'gateway#acceptFriendRequest'
+        post 'request/reject/:username', to: 'gateway#rejectFriendRequest'
+      end
     end
 
     scope :categoria do
